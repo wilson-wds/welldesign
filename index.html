@@ -51,8 +51,19 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
+    <!-- ===== 載入畫面 ===== -->
+    <div id="loading-container" class="flex items-center justify-center h-screen">
+        <div class="text-center">
+            <svg class="animate-spin h-8 w-8 text-wine-800 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-lg text-slate-600 mt-4">正在驗證您的身分...</p>
+        </div>
+    </div>
+
     <!-- ===== 登入畫面 ===== -->
-    <div id="login-container" class="flex items-center justify-center h-screen">
+    <div id="login-container" class="hidden flex items-center justify-center h-screen">
         <div class="text-center p-8 bg-white shadow-lg rounded-lg">
             <img src="https://i.ibb.co/7ttRLCcK/120x120.jpg" alt="威爾設計工作室 LOGO" class="w-24 h-24 rounded-full mx-auto mb-4">
             <h1 class="text-2xl font-bold text-slate-800 mb-2">威爾設計工作室 CRM</h1>
@@ -144,6 +155,7 @@
             const auth = firebase.auth();
             
             // --- 2. 元素參考 ---
+            const loadingContainer = document.getElementById('loading-container');
             const loginContainer = document.getElementById('login-container');
             const appContainer = document.getElementById('app-container');
             const googleLoginBtn = document.getElementById('google-login-btn');
@@ -156,6 +168,7 @@
 
             // --- 3. 驗證邏輯 ---
             auth.onAuthStateChanged(user => {
+                loadingContainer.classList.add('hidden'); // 收到驗證狀態後，隱藏載入畫面
                 if (user) {
                     loginContainer.classList.add('hidden');
                     appContainer.classList.remove('hidden');
@@ -171,14 +184,18 @@
                 }
             });
 
-            googleLoginBtn.addEventListener('click', () => {
-                // **重要**: 請務必在您的 Firebase 控制台中啟用 Google 登入！
-                // 步驟：前往 Firebase Console > Authentication > Sign-in method > 點擊 Google 並啟用。
-                const provider = new firebase.auth.GoogleAuthProvider();
-                auth.signInWithRedirect(provider).catch(error => {
-                    console.error("Google 登入失敗", error);
-                    alert("Google 登入失敗，請確認您已在 Firebase 控制台啟用 Google 登入，並檢查瀏覽器 console 的錯誤訊息。");
+            // 處理從 Google 登入後跳轉回來的結果
+            auth.getRedirectResult()
+                .catch((error) => {
+                    console.error("處理登入跳轉失敗:", error);
+                    alert(`登入驗證時發生錯誤: ${error.message}`);
+                    loadingContainer.classList.add('hidden');
+                    loginContainer.classList.remove('hidden');
                 });
+
+            googleLoginBtn.addEventListener('click', () => {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                auth.signInWithRedirect(provider);
             });
 
             logoutBtn.addEventListener('click', () => {
