@@ -185,7 +185,8 @@
 
             googleLoginBtn.addEventListener('click', () => {
                 const provider = new firebase.auth.GoogleAuthProvider();
-                auth.signInWithPopup(provider).catch(error => console.error("Google 登入失敗", error));
+                // **FIX: Changed to signInWithRedirect to avoid popup blockers**
+                auth.signInWithRedirect(provider).catch(error => console.error("Google 登入失敗", error));
             });
 
             logoutBtn.addEventListener('click', () => {
