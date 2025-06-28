@@ -157,44 +157,36 @@
             // --- 3. 驗證邏輯 ---
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    // 使用者已登入
                     loginContainer.classList.add('hidden');
                     appContainer.classList.remove('hidden');
-                    
-                    userProfileEl.innerHTML = `
-                        <img src="${user.photoURL}" alt="${user.displayName}" class="w-9 h-9 rounded-full">
-                        <div>
-                           <div class="text-sm font-medium text-slate-700">${user.displayName}</div>
-                           <div class="text-xs text-slate-500">${user.email}</div>
-                        </div>`;
-                    
-                    // 啟動資料庫監聽
+                    userProfileEl.innerHTML = `<img src="${user.photoURL}" alt="${user.displayName}" class="w-9 h-9 rounded-full"><div><div class="text-sm font-medium text-slate-700">${user.displayName}</div><div class="text-xs text-slate-500">${user.email}</div></div>`;
                     initDataListeners();
                     switchTab('dashboard-content');
                 } else {
-                    // 使用者未登入
                     loginContainer.classList.remove('hidden');
                     appContainer.classList.add('hidden');
                     userProfileEl.innerHTML = '';
-                    
-                    // 停止資料庫監聽
                     if (unsubscribeCustomers) unsubscribeCustomers();
                     if (unsubscribeProjects) unsubscribeProjects();
                 }
             });
 
             googleLoginBtn.addEventListener('click', () => {
+                // **重要**: 請務必在您的 Firebase 控制台中啟用 Google 登入！
+                // 步驟：前往 Firebase Console > Authentication > Sign-in method > 點擊 Google 並啟用。
                 const provider = new firebase.auth.GoogleAuthProvider();
-                auth.signInWithRedirect(provider).catch(error => console.error("Google 登入失敗", error));
+                auth.signInWithRedirect(provider).catch(error => {
+                    console.error("Google 登入失敗", error);
+                    alert("Google 登入失敗，請確認您已在 Firebase 控制台啟用 Google 登入，並檢查瀏覽器 console 的錯誤訊息。");
+                });
             });
 
             logoutBtn.addEventListener('click', () => {
                 auth.signOut();
             });
 
-            // --- 4. 資料監聽與互動 (登入後才啟動) ---
+            // --- 4. 資料監聽與互動 ---
             function initDataListeners() {
-                // 客戶管理
                 const customerListBody = document.getElementById('customer-list-body');
                 const customerCountEl = document.getElementById('customer-count');
                 const dashboardCustomerCountEl = document.getElementById('dashboard-customer-count');
@@ -210,7 +202,6 @@
                     const count = snapshot.size;
                     customerCountEl.textContent = `總共找到 ${count} 位客戶`;
                     dashboardCustomerCountEl.textContent = count;
-
                     snapshot.forEach(doc => {
                         const customer = doc.data(); const id = doc.id; 
                         const row = document.createElement('tr');
@@ -220,7 +211,6 @@
                     });
                 });
 
-                // 專案管理
                 const planningColumn = document.getElementById('planning-column');
                 const inprogressColumn = document.getElementById('inprogress-column');
                 const completedColumn = document.getElementById('completed-column');
@@ -235,18 +225,15 @@
                         card.className = 'bg-white p-4 rounded-lg shadow-sm border cursor-pointer'; card.dataset.id = id;
                         card.innerHTML = `<h4 class="font-bold text-slate-800">${project.projectName}</h4><p class="text-sm text-slate-600 mt-1">${project.customerName || '未指定客戶'}</p><div class="text-xs text-slate-500 mt-3"><span>截止日期:</span><span>${project.deadline || 'N/A'}</span></div>`;
                         card.addEventListener('click', () => openProjectModal('edit', doc));
-                        if(project.status === '進行中'){
-                            inprogressColumn.appendChild(card);
-                            inProgressCount++;
-                        } else if (project.status === '已完成') { completedColumn.appendChild(card); }
+                        if(project.status === '進行中'){ inprogressColumn.appendChild(card); inProgressCount++; } 
+                        else if (project.status === '已完成') { completedColumn.appendChild(card); }
                         else { planningColumn.appendChild(card); }
                     });
                     dashboardProjectCountEl.textContent = inProgressCount;
                 });
             }
 
-            // --- 5. Modal 互動 (所有 Modal 的邏輯) ---
-            // Customer Add Modal
+            // --- 5. Modal 互動 ---
             const addCustomerModal = document.getElementById('add-customer-modal');
             const addCustomerForm = document.getElementById('add-customer-form');
             document.getElementById('add-customer-btn').addEventListener('click', () => openAddCustomerModal());
@@ -257,7 +244,6 @@
             function openAddCustomerModal() { addCustomerModal.classList.remove('opacity-0', 'pointer-events-none'); addCustomerModal.querySelector('.modal-content').classList.remove('opacity-0', '-translate-y-10'); }
             function closeAddCustomerModal() { addCustomerModal.classList.add('opacity-0'); addCustomerModal.querySelector('.modal-content').classList.add('opacity-0', '-translate-y-10'); setTimeout(() => addCustomerModal.classList.add('pointer-events-none'), 300); addCustomerForm.reset(); }
             
-            // Customer Edit Modal
             const editCustomerModal = document.getElementById('edit-customer-modal');
             const editCustomerForm = document.getElementById('edit-customer-form');
             document.getElementById('edit-modal-close-btn').addEventListener('click', () => closeEditCustomerModal());
@@ -288,7 +274,6 @@
                 }
             });
 
-            // Project Modal
             const projectModal = document.getElementById('project-modal');
             const projectForm = document.getElementById('project-form');
             const projectCustomerSelect = document.getElementById('projectCustomer');
