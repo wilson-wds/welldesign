@@ -77,7 +77,6 @@
             
             <div class="flex-1 overflow-y-auto p-8">
                 <div id="dashboard-content" class="content-section">
-                     <!-- 關鍵指標卡 -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between"><h3 class="text-slate-500 text-sm font-medium">總客戶數</h3><p id="dashboard-customer-count" class="text-3xl font-bold text-wine-800 mt-2">0</p></div>
                         <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between"><h3 class="text-slate-500 text-sm font-medium">進行中專案</h3><p class="text-3xl font-bold text-wine-800 mt-2">0</p></div>
@@ -87,9 +86,17 @@
                 </div>
                 <div id="customers-content" class="content-section hidden">
                     <div class="flex justify-between items-center mb-6"><p id="customer-count" class="text-sm text-slate-500"></p><button id="add-customer-btn" class="flex items-center justify-center bg-wine-800 hover:bg-wine-900 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm"><svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>新增客戶</button></div>
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="bg-white rounded-lg shadow-md overflow-x-auto">
                         <table class="w-full text-sm text-left text-slate-600">
-                            <thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th scope="col" class="px-6 py-3">公司名稱</th><th scope="col" class="px-6 py-3">聯絡人</th><th scope="col" class="px-6 py-3">狀態</th><th scope="col" class="px-6 py-3">專案數</th><th scope="col" class="px-6 py-3 text-center">操作</th></tr></thead>
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">公司 / 統編</th>
+                                    <th scope="col" class="px-6 py-3">聯絡人</th>
+                                    <th scope="col" class="px-6 py-3">連絡電話</th>
+                                    <th scope="col" class="px-6 py-3">狀態</th>
+                                    <th scope="col" class="px-6 py-3 text-center">操作</th>
+                                </tr>
+                            </thead>
                             <tbody id="customer-list-body"></tbody>
                         </table>
                     </div>
@@ -104,14 +111,18 @@
     </div>
 
     <div id="add-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none">
-        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-md p-6 opacity-0 -translate-y-10">
-            <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold text-slate-800">新增客戶</h3><button id="modal-close-btn" class="text-slate-500 hover:text-slate-800">&times;</button></div>
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10">
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">新增客戶</h3><button id="modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div>
             <form id="add-customer-form">
-                <div class="space-y-4">
-                    <div><label for="companyName" class="block text-sm font-medium text-slate-700">公司名稱</label><input type="text" id="companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
-                    <div><label for="contactPerson" class="block text-sm font-medium text-slate-700">聯絡人</label><input type="text" id="contactPerson" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
-                    <div><label for="email" class="block text-sm font-medium text-slate-700">電子郵件</label><input type="email" id="email" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
-                    <div><label for="status" class="block text-sm font-medium text-slate-700">狀態</label><select id="status" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>潛在客戶</option><option>活躍客戶</option><option>已流失</option></select></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label for="companyName" class="block text-sm font-medium text-slate-700">公司名稱*</label><input type="text" id="companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
+                    <div><label for="taxId" class="block text-sm font-medium text-slate-700">統一編號</label><input type="text" id="taxId" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
+                    <div><label for="contactPerson" class="block text-sm font-medium text-slate-700">聯絡人*</label><input type="text" id="contactPerson" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
+                    <div><label for="phone" class="block text-sm font-medium text-slate-700">連絡電話</label><input type="tel" id="phone" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
+                    <div><label for="fax" class="block text-sm font-medium text-slate-700">傳真</label><input type="tel" id="fax" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
+                    <div><label for="email" class="block text-sm font-medium text-slate-700">電子郵件*</label><input type="email" id="email" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
+                    <div class="md:col-span-2"><label for="address" class="block text-sm font-medium text-slate-700">地址</label><input type="text" id="address" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
+                    <div class="md:col-span-2"><label for="status" class="block text-sm font-medium text-slate-700">狀態</label><select id="status" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>潛在客戶</option><option>活躍客戶</option><option>已流失</option></select></div>
                 </div>
                 <div class="mt-6 flex justify-end space-x-3">
                     <button type="button" id="modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button>
@@ -127,7 +138,6 @@
 
     <script>
         // --- 1. 初始化 Firebase ---
-        // 您提供的 Firebase 設定金鑰
         const firebaseConfig = {
             apiKey: "AIzaSyCdpojQ8seLBEXJCjb26uzdBAUT8e7JNL0",
             authDomain: "will-design-crm.firebaseapp.com",
@@ -136,11 +146,7 @@
             messagingSenderId: "129830855502",
             appId: "1:129830855502:web:de4bcd5e0a7122b3cb741f"
         };
-
-        // 初始化 Firebase App
         firebase.initializeApp(firebaseConfig);
-
-        // 初始化服務
         const db = firebase.firestore();
         const auth = firebase.auth();
         
@@ -172,16 +178,19 @@
                 switch(customer.status) {
                     case '活躍客戶': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-wine-800 bg-wine-100 rounded-full">${customer.status}</span>`; break;
                     case '潛在客戶': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-amber-800 bg-amber-100 rounded-full">${customer.status}</span>`; break;
-                    default: statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-slate-800 bg-slate-200 rounded-full">${customer.status}</span>`; break;
+                    default: statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-slate-800 bg-slate-200 rounded-full">${customer.status || 'N/A'}</span>`; break;
                 }
 
                 const row = document.createElement('tr');
                 row.className = 'bg-white border-b hover:bg-slate-50';
                 row.innerHTML = `
-                    <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap"><div class="font-bold">${customer.companyName}</div><div class="text-xs text-slate-500">${customer.email}</div></td>
+                    <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
+                        <div class="font-bold">${customer.companyName}</div>
+                        <div class="text-xs text-slate-500">統編: ${customer.taxId || 'N/A'}</div>
+                    </td>
                     <td class="px-6 py-4">${customer.contactPerson}</td>
+                    <td class="px-6 py-4">${customer.phone || 'N/A'}</td>
                     <td class="px-6 py-4">${statusBadge}</td>
-                    <td class="px-6 py-4">${customer.projectCount || 0}</td>
                     <td class="px-6 py-4 text-center space-x-2">
                         <button class="font-medium text-wine-700 hover:underline">編輯</button>
                         <button data-id="${id}" class="delete-btn font-medium text-slate-500 hover:underline">刪除</button>
@@ -197,7 +206,11 @@
             e.preventDefault();
             customerCollection.add({
                 companyName: document.getElementById('companyName').value,
+                taxId: document.getElementById('taxId').value,
                 contactPerson: document.getElementById('contactPerson').value,
+                phone: document.getElementById('phone').value,
+                fax: document.getElementById('fax').value,
+                address: document.getElementById('address').value,
                 email: document.getElementById('email').value,
                 status: document.getElementById('status').value,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -242,7 +255,6 @@
         cancelBtn.addEventListener('click', closeModal);
         modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
-        // 初始載入儀表板
         switchTab('dashboard-content');
     </script>
 </body>
