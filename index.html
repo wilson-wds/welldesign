@@ -110,9 +110,10 @@
         </main>
     </div>
 
+    <!-- ===== 新增客戶 Modal ===== -->
     <div id="add-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none">
         <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10">
-            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">新增客戶</h3><button id="modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div>
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">新增客戶</h3><button id="add-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div>
             <form id="add-customer-form">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div><label for="companyName" class="block text-sm font-medium text-slate-700">公司名稱*</label><input type="text" id="companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
@@ -122,16 +123,42 @@
                     <div><label for="fax" class="block text-sm font-medium text-slate-700">傳真</label><input type="tel" id="fax" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
                     <div><label for="email" class="block text-sm font-medium text-slate-700">電子郵件*</label><input type="email" id="email" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
                     <div class="md:col-span-2"><label for="address" class="block text-sm font-medium text-slate-700">地址</label><input type="text" id="address" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
+                    <div class="md:col-span-2"><label for="notes" class="block text-sm font-medium text-slate-700">備註</label><textarea id="notes" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></textarea></div>
                     <div class="md:col-span-2"><label for="status" class="block text-sm font-medium text-slate-700">狀態</label><select id="status" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>潛在客戶</option><option>活躍客戶</option><option>已流失</option></select></div>
                 </div>
                 <div class="mt-6 flex justify-end space-x-3">
-                    <button type="button" id="modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button>
+                    <button type="button" id="add-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button>
                     <button type="submit" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900">儲存客戶</button>
                 </div>
             </form>
         </div>
     </div>
     
+    <!-- ===== 編輯客戶 Modal ===== -->
+    <div id="edit-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none">
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10">
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">編輯客戶資料</h3><button id="edit-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div>
+            <form id="edit-customer-form">
+                <input type="hidden" id="edit-customerId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label for="edit-companyName" class="block text-sm font-medium text-slate-700">公司名稱*</label><input type="text" id="edit-companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
+                    <div><label for="edit-taxId" class="block text-sm font-medium text-slate-700">統一編號</label><input type="text" id="edit-taxId" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
+                    <div><label for="edit-contactPerson" class="block text-sm font-medium text-slate-700">聯絡人*</label><input type="text" id="edit-contactPerson" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
+                    <div><label for="edit-phone" class="block text-sm font-medium text-slate-700">連絡電話</label><input type="tel" id="edit-phone" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
+                    <div><label for="edit-fax" class="block text-sm font-medium text-slate-700">傳真</label><input type="tel" id="edit-fax" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
+                    <div><label for="edit-email" class="block text-sm font-medium text-slate-700">電子郵件*</label><input type="email" id="edit-email" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
+                    <div class="md:col-span-2"><label for="edit-address" class="block text-sm font-medium text-slate-700">地址</label><input type="text" id="edit-address" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
+                    <div class="md:col-span-2"><label for="edit-notes" class="block text-sm font-medium text-slate-700">備註</label><textarea id="edit-notes" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></textarea></div>
+                    <div class="md:col-span-2"><label for="edit-status" class="block text-sm font-medium text-slate-700">狀態</label><select id="edit-status" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>潛在客戶</option><option>活躍客戶</option><option>已流失</option></select></div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" id="edit-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button>
+                    <button type="submit" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900">更新客戶</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
@@ -192,7 +219,7 @@
                     <td class="px-6 py-4">${customer.phone || 'N/A'}</td>
                     <td class="px-6 py-4">${statusBadge}</td>
                     <td class="px-6 py-4 text-center space-x-2">
-                        <button class="font-medium text-wine-700 hover:underline">編輯</button>
+                        <button data-id="${id}" class="edit-btn font-medium text-wine-700 hover:underline">編輯</button>
                         <button data-id="${id}" class="delete-btn font-medium text-slate-500 hover:underline">刪除</button>
                     </td>
                 `;
@@ -200,7 +227,8 @@
             });
         });
         
-        // 新增客戶表單提交
+        // --- 3. 表單與 Modal 互動 ---
+        // 新增客戶表單
         const addCustomerForm = document.getElementById('add-customer-form');
         addCustomerForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -212,22 +240,69 @@
                 fax: document.getElementById('fax').value,
                 address: document.getElementById('address').value,
                 email: document.getElementById('email').value,
+                notes: document.getElementById('notes').value, // 新增備註
                 status: document.getElementById('status').value,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => closeModal()).catch(error => console.error("新增失敗: ", error));
+            }).then(() => closeAddModal()).catch(error => console.error("新增失敗: ", error));
+        });
+        
+        // 編輯客戶表單
+        const editCustomerForm = document.getElementById('edit-customer-form');
+        editCustomerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const customerId = document.getElementById('edit-customerId').value;
+            if (!customerId) return;
+
+            const updatedData = {
+                companyName: document.getElementById('edit-companyName').value,
+                taxId: document.getElementById('edit-taxId').value,
+                contactPerson: document.getElementById('edit-contactPerson').value,
+                phone: document.getElementById('edit-phone').value,
+                fax: document.getElementById('edit-fax').value,
+                address: document.getElementById('edit-address').value,
+                email: document.getElementById('edit-email').value,
+                notes: document.getElementById('edit-notes').value, // 新增備註
+                status: document.getElementById('edit-status').value,
+            };
+
+            customerCollection.doc(customerId).update(updatedData)
+                .then(() => closeEditModal())
+                .catch(error => console.error("更新失敗: ", error));
         });
 
-        // 刪除客戶
+        // 列表按鈕事件委派 (編輯與刪除)
         customerListBody.addEventListener('click', function(e) {
-            if (e.target.classList.contains('delete-btn')) {
-                const id = e.target.dataset.id;
+            const target = e.target;
+            const id = target.dataset.id;
+            if (!id) return;
+
+            if (target.classList.contains('delete-btn')) {
                 if (confirm('確定要刪除這位客戶嗎？此操作無法復原。')) {
                     customerCollection.doc(id).delete();
                 }
             }
+            
+            if (target.classList.contains('edit-btn')) {
+                customerCollection.doc(id).get().then(doc => {
+                    if (doc.exists) {
+                        const customer = doc.data();
+                        document.getElementById('edit-customerId').value = doc.id;
+                        document.getElementById('edit-companyName').value = customer.companyName || '';
+                        document.getElementById('edit-taxId').value = customer.taxId || '';
+                        document.getElementById('edit-contactPerson').value = customer.contactPerson || '';
+                        document.getElementById('edit-phone').value = customer.phone || '';
+                        document.getElementById('edit-fax').value = customer.fax || '';
+                        document.getElementById('edit-email').value = customer.email || '';
+                        document.getElementById('edit-address').value = customer.address || '';
+                        document.getElementById('edit-notes').value = customer.notes || '';
+                        document.getElementById('edit-status').value = customer.status || '潛在客戶';
+                        openEditModal();
+                    }
+                });
+            }
         });
 
-        // --- 3. UI 互動邏輯 ---
+        // --- 4. UI 互動邏輯 (Modals, 頁面切換) ---
         const navLinks = document.querySelectorAll('.nav-link');
         const contentSections = document.querySelectorAll('.content-section');
         const headerTitle = document.getElementById('main-header-title');
@@ -243,17 +318,29 @@
         }
         navLinks.forEach(link => link.addEventListener('click', e => { e.preventDefault(); switchTab(link.dataset.target); }));
         
-        const modal = document.getElementById('add-customer-modal');
-        const modalContent = modal.querySelector('.modal-content');
+        // 新增 Modal
+        const addModal = document.getElementById('add-customer-modal');
+        const addModalContent = addModal.querySelector('.modal-content');
         const addCustomerBtn = document.getElementById('add-customer-btn');
-        const closeBtn = document.getElementById('modal-close-btn');
-        const cancelBtn = document.getElementById('modal-cancel-btn');
-        function openModal() { modal.classList.remove('opacity-0', 'pointer-events-none'); modalContent.classList.remove('opacity-0', '-translate-y-10'); }
-        function closeModal() { modal.classList.add('opacity-0'); modalContent.classList.add('opacity-0', '-translate-y-10'); setTimeout(() => modal.classList.add('pointer-events-none'), 300); addCustomerForm.reset(); }
-        addCustomerBtn.addEventListener('click', openModal);
-        closeBtn.addEventListener('click', closeModal);
-        cancelBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+        const addCloseBtn = document.getElementById('add-modal-close-btn');
+        const addCancelBtn = document.getElementById('add-modal-cancel-btn');
+        function openAddModal() { addModal.classList.remove('opacity-0', 'pointer-events-none'); addModalContent.classList.remove('opacity-0', '-translate-y-10'); }
+        function closeAddModal() { addModal.classList.add('opacity-0'); addModalContent.classList.add('opacity-0', '-translate-y-10'); setTimeout(() => addModal.classList.add('pointer-events-none'), 300); addCustomerForm.reset(); }
+        addCustomerBtn.addEventListener('click', openAddModal);
+        addCloseBtn.addEventListener('click', closeAddModal);
+        addCancelBtn.addEventListener('click', closeAddModal);
+        addModal.addEventListener('click', e => { if (e.target === addModal) closeAddModal(); });
+        
+        // 編輯 Modal
+        const editModal = document.getElementById('edit-customer-modal');
+        const editModalContent = editModal.querySelector('.modal-content');
+        const editCloseBtn = document.getElementById('edit-modal-close-btn');
+        const editCancelBtn = document.getElementById('edit-modal-cancel-btn');
+        function openEditModal() { editModal.classList.remove('opacity-0', 'pointer-events-none'); editModalContent.classList.remove('opacity-0', '-translate-y-10'); }
+        function closeEditModal() { editModal.classList.add('opacity-0'); editModalContent.classList.add('opacity-0', '-translate-y-10'); setTimeout(() => editModal.classList.add('pointer-events-none'), 300); editCustomerForm.reset(); }
+        editCloseBtn.addEventListener('click', closeEditModal);
+        editCancelBtn.addEventListener('click', closeEditModal);
+        editModal.addEventListener('click', e => { if (e.target === editModal) closeEditModal(); });
 
         switchTab('dashboard-content');
     </script>
