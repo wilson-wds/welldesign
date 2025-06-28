@@ -47,7 +47,7 @@
         .modal-backdrop { transition: opacity 0.3s ease; }
         .modal-content { transition: transform 0.3s ease, opacity 0.3s ease; }
         .truncate-text { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .kanban-column { min-width: 300px; } /* 確保看板欄位不會太窄 */
+        .kanban-column { min-width: 300px; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
@@ -72,49 +72,30 @@
             <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8">
                 <div><h1 id="main-header-title" class="text-2xl font-bold text-slate-800"></h1></div>
                 <div class="flex items-center space-x-6">
-                    <div id="project-actions" class="hidden">
-                        <button id="add-project-btn" class="flex items-center justify-center bg-wine-800 hover:bg-wine-900 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm"><svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>新增專案</button>
-                    </div>
-                     <div id="customer-actions" class="hidden">
-                        <button id="add-customer-btn" class="flex items-center justify-center bg-wine-800 hover:bg-wine-900 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm"><svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>新增客戶</button>
-                    </div>
+                    <div id="project-actions" class="hidden"><button id="add-project-btn" class="flex items-center justify-center bg-wine-800 hover:bg-wine-900 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm"><svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>新增專案</button></div>
+                    <div id="customer-actions" class="hidden"><button id="add-customer-btn" class="flex items-center justify-center bg-wine-800 hover:bg-wine-900 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm"><svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>新增客戶</button></div>
                     <div id="user-profile" class="flex items-center space-x-2"></div>
                 </div>
             </header>
             
             <div class="flex-1 overflow-auto p-8">
-                <div id="dashboard-content" class="content-section"></div>
+                <div id="dashboard-content" class="content-section">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between"><h3 class="text-slate-500 text-sm font-medium">總客戶數</h3><p id="dashboard-customer-count" class="text-3xl font-bold text-wine-800 mt-2">0</p></div>
+                        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between"><h3 class="text-slate-500 text-sm font-medium">進行中專案</h3><p id="dashboard-project-count" class="text-3xl font-bold text-wine-800 mt-2">0</p></div>
+                    </div>
+                </div>
                 <div id="customers-content" class="content-section hidden">
                     <div class="flex justify-between items-center mb-6"><p id="customer-count" class="text-sm text-slate-500"></p></div>
                     <div class="bg-white rounded-lg shadow-md overflow-x-auto">
-                        <table class="w-full text-sm text-left text-slate-600">
-                            <thead class="text-xs text-slate-700 uppercase bg-slate-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">公司 / 統編</th><th scope="col" class="px-6 py-3">聯絡人</th><th scope="col" class="px-6 py-3">連絡電話</th><th scope="col" class="px-6 py-3">地址</th><th scope="col" class="px-6 py-3">備註</th><th scope="col" class="px-6 py-3 text-center">操作</th>
-                                </tr>
-                            </thead>
-                            <tbody id="customer-list-body"></tbody>
-                        </table>
+                        <table class="w-full text-sm text-left text-slate-600"><thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th scope="col" class="px-6 py-3">公司 / 統編</th><th scope="col" class="px-6 py-3">聯絡人</th><th scope="col" class="px-6 py-3">連絡電話</th><th scope="col" class="px-6 py-3">地址</th><th scope="col" class="px-6 py-3">備註</th><th scope="col" class="px-6 py-3 text-center">操作</th></tr></thead><tbody id="customer-list-body"></tbody></table>
                     </div>
                 </div>
-                <!-- ===== 專案管理頁面 ===== -->
                 <div id="projects-content" class="content-section hidden h-full">
                     <div class="flex space-x-6 h-full overflow-x-auto pb-4">
-                        <!-- 規劃中 -->
-                        <div class="kanban-column flex-shrink-0 w-1/3 bg-slate-100 rounded-lg">
-                            <h3 class="text-md font-bold text-slate-700 p-4 border-b border-slate-200">規劃中</h3>
-                            <div id="planning-column" class="p-4 space-y-4 overflow-y-auto h-full"></div>
-                        </div>
-                        <!-- 進行中 -->
-                        <div class="kanban-column flex-shrink-0 w-1/3 bg-slate-100 rounded-lg">
-                            <h3 class="text-md font-bold text-slate-700 p-4 border-b border-slate-200">進行中</h3>
-                            <div id="inprogress-column" class="p-4 space-y-4 overflow-y-auto h-full"></div>
-                        </div>
-                        <!-- 已完成 -->
-                        <div class="kanban-column flex-shrink-0 w-1/3 bg-slate-100 rounded-lg">
-                            <h3 class="text-md font-bold text-slate-700 p-4 border-b border-slate-200">已完成</h3>
-                            <div id="completed-column" class="p-4 space-y-4 overflow-y-auto h-full"></div>
-                        </div>
+                        <div class="kanban-column flex-shrink-0 w-1/3 bg-slate-100 rounded-lg"><h3 class="text-md font-bold text-slate-700 p-4 border-b border-slate-200">規劃中</h3><div id="planning-column" class="p-4 space-y-4 overflow-y-auto h-full"></div></div>
+                        <div class="kanban-column flex-shrink-0 w-1/3 bg-slate-100 rounded-lg"><h3 class="text-md font-bold text-slate-700 p-4 border-b border-slate-200">進行中</h3><div id="inprogress-column" class="p-4 space-y-4 overflow-y-auto h-full"></div></div>
+                        <div class="kanban-column flex-shrink-0 w-1/3 bg-slate-100 rounded-lg"><h3 class="text-md font-bold text-slate-700 p-4 border-b border-slate-200">已完成</h3><div id="completed-column" class="p-4 space-y-4 overflow-y-auto h-full"></div></div>
                     </div>
                 </div>
                 <div id="calendar-content" class="content-section hidden"><p class="text-slate-600">這裡是行事曆頁面。</p></div>
@@ -125,193 +106,223 @@
         </main>
     </div>
 
-    <!-- Modals (Add/Edit Customer, Add/Edit Project) -->
-    <div id="add-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"></div>
-    <div id="edit-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"></div>
-    
+    <!-- ===== 新增客戶 Modal ===== -->
+    <div id="add-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">新增客戶</h3><button id="add-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="add-customer-form"><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="companyName" class="block text-sm font-medium text-slate-700">公司名稱*</label><input type="text" id="companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="taxId" class="block text-sm font-medium text-slate-700">統一編號</label><input type="text" id="taxId" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="contactPerson" class="block text-sm font-medium text-slate-700">聯絡人*</label><input type="text" id="contactPerson" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="phone" class="block text-sm font-medium text-slate-700">連絡電話</label><input type="tel" id="phone" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="fax" class="block text-sm font-medium text-slate-700">傳真</label><input type="tel" id="fax" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="email" class="block text-sm font-medium text-slate-700">電子郵件*</label><input type="email" id="email" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div class="md:col-span-2"><label for="address" class="block text-sm font-medium text-slate-700">地址</label><input type="text" id="address" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div class="md:col-span-2"><label for="notes" class="block text-sm font-medium text-slate-700">備註</label><textarea id="notes" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></textarea></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" id="add-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900">儲存客戶</button></div></form></div></div>
+    <!-- ===== 編輯客戶 Modal ===== -->
+    <div id="edit-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">編輯客戶資料</h3><button id="edit-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="edit-customer-form"><input type="hidden" id="edit-customerId"><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="edit-companyName" class="block text-sm font-medium text-slate-700">公司名稱*</label><input type="text" id="edit-companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="edit-taxId" class="block text-sm font-medium text-slate-700">統一編號</label><input type="text" id="edit-taxId" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="edit-contactPerson" class="block text-sm font-medium text-slate-700">聯絡人*</label><input type="text" id="edit-contactPerson" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="edit-phone" class="block text-sm font-medium text-slate-700">連絡電話</label><input type="tel" id="edit-phone" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="edit-fax" class="block text-sm font-medium text-slate-700">傳真</label><input type="tel" id="edit-fax" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="edit-email" class="block text-sm font-medium text-slate-700">電子郵件*</label><input type="email" id="edit-email" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div class="md:col-span-2"><label for="edit-address" class="block text-sm font-medium text-slate-700">地址</label><input type="text" id="edit-address" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div class="md:col-span-2"><label for="edit-notes" class="block text-sm font-medium text-slate-700">備註</label><textarea id="edit-notes" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></textarea></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" id="edit-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900">更新客戶</button></div></form></div></div>
     <!-- ===== 新增/編輯專案 Modal ===== -->
-    <div id="project-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none">
-        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10">
-            <div class="flex justify-between items-center mb-6"><h3 id="project-modal-title" class="text-xl font-bold text-slate-800"></h3><button id="project-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div>
-            <form id="project-form">
-                <input type="hidden" id="projectId">
-                <div class="space-y-4">
-                    <div><label for="projectName" class="block text-sm font-medium text-slate-700">專案名稱*</label><input type="text" id="projectName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
-                    <div><label for="projectCustomer" class="block text-sm font-medium text-slate-700">關聯客戶*</label><select id="projectCustomer" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></select></div>
-                    <div><label for="projectDeadline" class="block text-sm font-medium text-slate-700">截止日期</label><input type="date" id="projectDeadline" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
-                    <div><label for="projectStatus" class="block text-sm font-medium text-slate-700">專案狀態</label><select id="projectStatus" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>規劃中</option><option>進行中</option><option>已完成</option></select></div>
-                </div>
-                <div class="mt-6 flex justify-end space-x-3">
-                    <button type="button" id="project-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button>
-                    <button type="submit" id="project-modal-submit-btn" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900"></button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+    <div id="project-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 id="project-modal-title" class="text-xl font-bold text-slate-800"></h3><button id="project-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="project-form"><input type="hidden" id="projectId"><div class="space-y-4"><div><label for="projectName" class="block text-sm font-medium text-slate-700">專案名稱*</label><input type="text" id="projectName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="projectCustomer" class="block text-sm font-medium text-slate-700">關聯客戶*</label><select id="projectCustomer" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></select></div><div><label for="projectDeadline" class="block text-sm font-medium text-slate-700">截止日期</label><input type="date" id="projectDeadline" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="projectStatus" class="block text-sm font-medium text-slate-700">專案狀態</label><select id="projectStatus" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>規劃中</option><option>進行中</option><option>已完成</option></select></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" id="project-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" id="project-modal-submit-btn" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900"></button></div></form></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
 
     <script>
-        // --- 1. 初始化 Firebase ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCdpojQ8seLBEXJCjb26uzdBAUT8e7JNL0",
-            authDomain: "will-design-crm.firebaseapp.com",
-            projectId: "will-design-crm",
-            storageBucket: "will-design-crm.appspot.com",
-            messagingSenderId: "129830855502",
-            appId: "1:129830855502:web:de4bcd5e0a7122b3cb741f"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-        
-        // --- 2. 資料庫集合 ---
-        const customerCollection = db.collection('customers');
-        const projectCollection = db.collection('projects');
-
-        // --- 3. 客戶管理邏輯 (與之前版本相同) ---
-        // ... 此處省略客戶管理的 JS 邏輯以保持簡潔，實際功能保留 ...
-
-        // --- 4. 專案管理邏輯 ---
-        const planningColumn = document.getElementById('planning-column');
-        const inprogressColumn = document.getElementById('inprogress-column');
-        const completedColumn = document.getElementById('completed-column');
-
-        projectCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
-            planningColumn.innerHTML = '';
-            inprogressColumn.innerHTML = '';
-            completedColumn.innerHTML = '';
-
-            snapshot.forEach(doc => {
-                const project = doc.data();
-                const id = doc.id;
-
-                const card = document.createElement('div');
-                card.className = 'bg-white p-4 rounded-lg shadow-sm border cursor-pointer';
-                card.dataset.id = id;
-                card.innerHTML = `
-                    <h4 class="font-bold text-slate-800">${project.projectName}</h4>
-                    <p class="text-sm text-slate-600 mt-1">${project.customerName || '未指定客戶'}</p>
-                    <div class="text-xs text-slate-500 mt-3">
-                        <span>截止日期:</span>
-                        <span>${project.deadline || 'N/A'}</span>
-                    </div>
-                `;
-
-                card.addEventListener('click', () => openProjectModal('edit', doc));
-
-                switch (project.status) {
-                    case '進行中': inprogressColumn.appendChild(card); break;
-                    case '已完成': completedColumn.appendChild(card); break;
-                    default: planningColumn.appendChild(card); break;
-                }
-            });
-        });
-
-        // --- 5. Modal 互動 (專案) ---
-        const projectModal = document.getElementById('project-modal');
-        const projectModalContent = projectModal.querySelector('.modal-content');
-        const addProjectBtn = document.getElementById('add-project-btn');
-        const projectModalTitle = document.getElementById('project-modal-title');
-        const projectModalSubmitBtn = document.getElementById('project-modal-submit-btn');
-        const projectForm = document.getElementById('project-form');
-        const projectCustomerSelect = document.getElementById('projectCustomer');
-
-        async function populateCustomerDropdown() {
-            projectCustomerSelect.innerHTML = '<option value="">請選擇客戶</option>';
-            const snapshot = await customerCollection.get();
-            snapshot.forEach(doc => {
-                const option = document.createElement('option');
-                option.value = doc.id;
-                option.textContent = doc.data().companyName;
-                option.dataset.name = doc.data().companyName;
-                projectCustomerSelect.appendChild(option);
-            });
-        }
-
-        function openProjectModal(mode, doc = null) {
-            projectForm.reset();
-            populateCustomerDropdown().then(() => {
-                if (mode === 'add') {
-                    projectModalTitle.textContent = '新增專案';
-                    projectModalSubmitBtn.textContent = '儲存專案';
-                    projectForm.dataset.mode = 'add';
-                    document.getElementById('projectId').value = '';
-                } else if (mode === 'edit' && doc) {
-                    projectModalTitle.textContent = '編輯專案';
-                    projectModalSubmitBtn.textContent = '更新專案';
-                    projectForm.dataset.mode = 'edit';
-                    
-                    const project = doc.data();
-                    document.getElementById('projectId').value = doc.id;
-                    document.getElementById('projectName').value = project.projectName;
-                    document.getElementById('projectCustomer').value = project.customerId;
-                    document.getElementById('projectDeadline').value = project.deadline;
-                    document.getElementById('projectStatus').value = project.status;
-                }
-                projectModal.classList.remove('opacity-0', 'pointer-events-none');
-                projectModalContent.classList.remove('opacity-0', '-translate-y-10');
-            });
-        }
-
-        function closeProjectModal() {
-            projectModal.classList.add('opacity-0');
-            projectModalContent.classList.add('opacity-0', '-translate-y-10');
-            setTimeout(() => projectModal.classList.add('pointer-events-none'), 300);
-        }
-
-        addProjectBtn.addEventListener('click', () => openProjectModal('add'));
-        document.getElementById('project-modal-close-btn').addEventListener('click', closeProjectModal);
-        document.getElementById('project-modal-cancel-btn').addEventListener('click', closeProjectModal);
-        projectModal.addEventListener('click', e => { if (e.target === projectModal) closeProjectModal(); });
-
-        projectForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const selectedOption = projectCustomerSelect.options[projectCustomerSelect.selectedIndex];
-            const data = {
-                projectName: document.getElementById('projectName').value,
-                customerId: document.getElementById('projectCustomer').value,
-                customerName: selectedOption.dataset.name,
-                deadline: document.getElementById('projectDeadline').value,
-                status: document.getElementById('projectStatus').value,
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- 1. 初始化 Firebase ---
+            const firebaseConfig = {
+                apiKey: "AIzaSyCdpojQ8seLBEXJCjb26uzdBAUT8e7JNL0",
+                authDomain: "will-design-crm.firebaseapp.com",
+                projectId: "will-design-crm",
+                storageBucket: "will-design-crm.appspot.com",
+                messagingSenderId: "129830855502",
+                appId: "1:129830855502:web:de4bcd5e0a7122b3cb741f"
             };
-
-            if (projectForm.dataset.mode === 'add') {
-                data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                projectCollection.add(data).then(closeProjectModal);
-            } else {
-                const id = document.getElementById('projectId').value;
-                projectCollection.doc(id).update(data).then(closeProjectModal);
-            }
-        });
-
-
-        // --- 6. 通用 UI 邏輯 ---
-        const navLinks = document.querySelectorAll('.nav-link');
-        const contentSections = document.querySelectorAll('.content-section');
-        const headerTitle = document.getElementById('main-header-title');
-        const customerActions = document.getElementById('customer-actions');
-        const projectActions = document.getElementById('project-actions');
-        const titles = {'dashboard-content': '儀表板', 'customers-content': '客戶管理', 'projects-content': '專案管理', 'calendar-content': '行事曆', 'billing-content': '帳務管理', 'reports-content': '報表分析', 'settings-content': '設定'};
-        
-        function switchTab(targetId) {
-            contentSections.forEach(s => s.classList.toggle('hidden', s.id !== targetId));
-            if (headerTitle && titles[targetId]) headerTitle.textContent = titles[targetId];
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            const auth = firebase.auth();
             
-            customerActions.classList.toggle('hidden', targetId !== 'customers-content');
-            projectActions.classList.toggle('hidden', targetId !== 'projects-content');
+            // --- 2. 資料庫集合 ---
+            const customerCollection = db.collection('customers');
+            const projectCollection = db.collection('projects');
 
-            navLinks.forEach(n => {
-                const isActive = n.dataset.target === targetId;
-                n.classList.toggle('bg-wine-100', isActive); n.classList.toggle('text-wine-800', isActive);
-                n.classList.toggle('text-slate-600', !isActive);
+            // --- 3. 客戶管理邏輯 ---
+            const customerListBody = document.getElementById('customer-list-body');
+            const customerCountEl = document.getElementById('customer-count');
+            const dashboardCustomerCountEl = document.getElementById('dashboard-customer-count');
+            
+            customerCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                customerListBody.innerHTML = ''; 
+                if (snapshot.empty) {
+                    customerListBody.innerHTML = `<tr><td colspan="6" class="text-center p-8 text-slate-500">尚無客戶資料</td></tr>`;
+                    customerCountEl.textContent = '總共找到 0 位客戶';
+                    dashboardCustomerCountEl.textContent = '0';
+                    return;
+                }
+                const count = snapshot.size;
+                customerCountEl.textContent = `總共找到 ${count} 位客戶`;
+                dashboardCustomerCountEl.textContent = count;
+
+                snapshot.forEach(doc => {
+                    const customer = doc.data();
+                    const id = doc.id; 
+                    const row = document.createElement('tr');
+                    row.className = 'bg-white border-b hover:bg-slate-50';
+                    row.innerHTML = `
+                        <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap"><div class="font-bold">${customer.companyName}</div><div class="text-xs text-slate-500">統編: ${customer.taxId || 'N/A'}</div></td>
+                        <td class="px-6 py-4">${customer.contactPerson}</td><td class="px-6 py-4">${customer.phone || 'N/A'}</td>
+                        <td class="px-6 py-4"><div class="truncate-text" title="${customer.address || ''}">${customer.address || 'N/A'}</div></td>
+                        <td class="px-6 py-4"><div class="truncate-text" title="${customer.notes || ''}">${customer.notes || 'N/A'}</div></td>
+                        <td class="px-6 py-4 text-center space-x-2"><button data-id="${id}" class="edit-btn font-medium text-wine-700 hover:underline">編輯</button><button data-id="${id}" class="delete-btn font-medium text-slate-500 hover:underline">刪除</button></td>
+                    `;
+                    customerListBody.appendChild(row);
+                });
             });
-        }
-        navLinks.forEach(link => link.addEventListener('click', e => { e.preventDefault(); switchTab(link.dataset.target); }));
-        switchTab('dashboard-content');
+            
+            const addCustomerForm = document.getElementById('add-customer-form');
+            addCustomerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                customerCollection.add({
+                    companyName: document.getElementById('companyName').value, taxId: document.getElementById('taxId').value,
+                    contactPerson: document.getElementById('contactPerson').value, phone: document.getElementById('phone').value,
+                    fax: document.getElementById('fax').value, address: document.getElementById('address').value,
+                    email: document.getElementById('email').value, notes: document.getElementById('notes').value,
+                    status: document.getElementById('status').value, // This field is in the form but not displayed in the table now
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => closeAddCustomerModal()).catch(error => console.error("新增失敗: ", error));
+            });
+            
+            const editCustomerForm = document.getElementById('edit-customer-form');
+            editCustomerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const customerId = document.getElementById('edit-customerId').value;
+                if (!customerId) return;
+                const updatedData = {
+                    companyName: document.getElementById('edit-companyName').value, taxId: document.getElementById('edit-taxId').value,
+                    contactPerson: document.getElementById('edit-contactPerson').value, phone: document.getElementById('edit-phone').value,
+                    fax: document.getElementById('edit-fax').value, address: document.getElementById('edit-address').value,
+                    email: document.getElementById('edit-email').value, notes: document.getElementById('edit-notes').value,
+                    status: document.getElementById('edit-status').value,
+                };
+                customerCollection.doc(customerId).update(updatedData).then(() => closeEditCustomerModal()).catch(error => console.error("更新失敗: ", error));
+            });
+
+            customerListBody.addEventListener('click', function(e) {
+                const target = e.target; const id = target.dataset.id; if (!id) return;
+                if (target.classList.contains('delete-btn')) { if (confirm('確定要刪除這位客戶嗎？此操作無法復原。')) { customerCollection.doc(id).delete(); } }
+                if (target.classList.contains('edit-btn')) {
+                    customerCollection.doc(id).get().then(doc => {
+                        if (doc.exists) {
+                            const customer = doc.data();
+                            document.getElementById('edit-customerId').value = doc.id;
+                            document.getElementById('edit-companyName').value = customer.companyName || '';
+                            document.getElementById('edit-taxId').value = customer.taxId || '';
+                            document.getElementById('edit-contactPerson').value = customer.contactPerson || '';
+                            document.getElementById('edit-phone').value = customer.phone || '';
+                            document.getElementById('edit-fax').value = customer.fax || '';
+                            document.getElementById('edit-email').value = customer.email || '';
+                            document.getElementById('edit-address').value = customer.address || '';
+                            document.getElementById('edit-notes').value = customer.notes || '';
+                            document.getElementById('edit-status').value = customer.status || '潛在客戶';
+                            openEditCustomerModal();
+                        }
+                    });
+                }
+            });
+
+            // --- 4. 專案管理邏輯 ---
+            const planningColumn = document.getElementById('planning-column');
+            const inprogressColumn = document.getElementById('inprogress-column');
+            const completedColumn = document.getElementById('completed-column');
+            const dashboardProjectCountEl = document.getElementById('dashboard-project-count');
+            
+            projectCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                planningColumn.innerHTML = ''; inprogressColumn.innerHTML = ''; completedColumn.innerHTML = '';
+                let inProgressCount = 0;
+                snapshot.forEach(doc => {
+                    const project = doc.data(); const id = doc.id;
+                    const card = document.createElement('div');
+                    card.className = 'bg-white p-4 rounded-lg shadow-sm border cursor-pointer'; card.dataset.id = id;
+                    card.innerHTML = `<h4 class="font-bold text-slate-800">${project.projectName}</h4><p class="text-sm text-slate-600 mt-1">${project.customerName || '未指定客戶'}</p><div class="text-xs text-slate-500 mt-3"><span>截止日期:</span><span>${project.deadline || 'N/A'}</span></div>`;
+                    card.addEventListener('click', () => openProjectModal('edit', doc));
+                    if(project.status === '進行中'){
+                        inprogressColumn.appendChild(card);
+                        inProgressCount++;
+                    } else if (project.status === '已完成') { completedColumn.appendChild(card); }
+                    else { planningColumn.appendChild(card); }
+                });
+                dashboardProjectCountEl.textContent = inProgressCount;
+            });
+            
+            // --- 5. Modal 互動 ---
+            const projectModal = document.getElementById('project-modal');
+            const projectModalContent = projectModal.querySelector('.modal-content');
+            const addProjectBtn = document.getElementById('add-project-btn');
+            const projectModalTitle = document.getElementById('project-modal-title');
+            const projectModalSubmitBtn = document.getElementById('project-modal-submit-btn');
+            const projectForm = document.getElementById('project-form');
+            const projectCustomerSelect = document.getElementById('projectCustomer');
+            async function populateCustomerDropdown() {
+                projectCustomerSelect.innerHTML = '<option value="">請選擇客戶</option>';
+                const snapshot = await customerCollection.get();
+                snapshot.forEach(doc => { const option = document.createElement('option'); option.value = doc.id; option.textContent = doc.data().companyName; option.dataset.name = doc.data().companyName; projectCustomerSelect.appendChild(option); });
+            }
+            function openProjectModal(mode, doc = null) {
+                projectForm.reset();
+                populateCustomerDropdown().then(() => {
+                    if (mode === 'add') { projectModalTitle.textContent = '新增專案'; projectModalSubmitBtn.textContent = '儲存專案'; projectForm.dataset.mode = 'add'; document.getElementById('projectId').value = ''; }
+                    else if (mode === 'edit' && doc) {
+                        projectModalTitle.textContent = '編輯專案'; projectModalSubmitBtn.textContent = '更新專案'; projectForm.dataset.mode = 'edit';
+                        const project = doc.data();
+                        document.getElementById('projectId').value = doc.id; document.getElementById('projectName').value = project.projectName;
+                        document.getElementById('projectCustomer').value = project.customerId; document.getElementById('projectDeadline').value = project.deadline;
+                        document.getElementById('projectStatus').value = project.status;
+                    }
+                    projectModal.classList.remove('opacity-0', 'pointer-events-none'); projectModalContent.classList.remove('opacity-0', '-translate-y-10');
+                });
+            }
+            function closeProjectModal() { projectModal.classList.add('opacity-0'); projectModalContent.classList.add('opacity-0', '-translate-y-10'); setTimeout(() => projectModal.classList.add('pointer-events-none'), 300); }
+            addProjectBtn.addEventListener('click', () => openProjectModal('add'));
+            document.getElementById('project-modal-close-btn').addEventListener('click', closeProjectModal);
+            document.getElementById('project-modal-cancel-btn').addEventListener('click', closeProjectModal);
+            projectModal.addEventListener('click', e => { if (e.target === projectModal) closeProjectModal(); });
+            projectForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const selectedOption = projectCustomerSelect.options[projectCustomerSelect.selectedIndex];
+                const data = { projectName: document.getElementById('projectName').value, customerId: document.getElementById('projectCustomer').value, customerName: selectedOption.dataset.name, deadline: document.getElementById('projectDeadline').value, status: document.getElementById('projectStatus').value, };
+                if (projectForm.dataset.mode === 'add') { data.createdAt = firebase.firestore.FieldValue.serverTimestamp(); projectCollection.add(data).then(closeProjectModal); } else { const id = document.getElementById('projectId').value; projectCollection.doc(id).update(data).then(closeProjectModal); }
+            });
+
+            // Customer Modals
+            const addCustomerModal = document.getElementById('add-customer-modal');
+            const addCustomerModalContent = addCustomerModal.querySelector('.modal-content');
+            const addCustomerBtn = document.getElementById('add-customer-btn');
+            const addCustomerCloseBtn = document.getElementById('add-modal-close-btn');
+            const addCustomerCancelBtn = document.getElementById('add-modal-cancel-btn');
+            function openAddCustomerModal() { addCustomerModal.classList.remove('opacity-0', 'pointer-events-none'); addCustomerModalContent.classList.remove('opacity-0', '-translate-y-10'); }
+            function closeAddCustomerModal() { addCustomerModal.classList.add('opacity-0'); addCustomerModalContent.classList.add('opacity-0', '-translate-y-10'); setTimeout(() => addCustomerModal.classList.add('pointer-events-none'), 300); addCustomerForm.reset(); }
+            addCustomerBtn.addEventListener('click', openAddCustomerModal);
+            addCustomerCloseBtn.addEventListener('click', closeAddCustomerModal);
+            addCustomerCancelBtn.addEventListener('click', closeAddCustomerModal);
+            addCustomerModal.addEventListener('click', e => { if (e.target === addCustomerModal) closeAddCustomerModal(); });
+            
+            const editCustomerModal = document.getElementById('edit-customer-modal');
+            const editCustomerModalContent = editCustomerModal.querySelector('.modal-content');
+            const editCustomerCloseBtn = document.getElementById('edit-modal-close-btn');
+            const editCustomerCancelBtn = document.getElementById('edit-modal-cancel-btn');
+            function openEditCustomerModal() { editCustomerModal.classList.remove('opacity-0', 'pointer-events-none'); editCustomerModalContent.classList.remove('opacity-0', '-translate-y-10'); }
+            function closeEditCustomerModal() { editCustomerModal.classList.add('opacity-0'); editCustomerModalContent.classList.add('opacity-0', '-translate-y-10'); setTimeout(() => editCustomerModal.classList.add('pointer-events-none'), 300); editCustomerForm.reset(); }
+            editCustomerCloseBtn.addEventListener('click', closeEditCustomerModal);
+            editCustomerCancelBtn.addEventListener('click', closeEditCustomerModal);
+            editCustomerModal.addEventListener('click', e => { if (e.target === editCustomerModal) closeEditCustomerModal(); });
+
+            // --- 6. 通用 UI 邏輯 ---
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const headerTitle = document.getElementById('main-header-title');
+            const customerActions = document.getElementById('customer-actions');
+            const projectActions = document.getElementById('project-actions');
+            const titles = {'dashboard-content': '儀表板', 'customers-content': '客戶管理', 'projects-content': '專案管理', 'calendar-content': '行事曆', 'billing-content': '帳務管理', 'reports-content': '報表分析', 'settings-content': '設定'};
+            function switchTab(targetId) {
+                contentSections.forEach(s => s.classList.toggle('hidden', s.id !== targetId));
+                if (headerTitle && titles[targetId]) headerTitle.textContent = titles[targetId];
+                customerActions.classList.toggle('hidden', targetId !== 'customers-content');
+                projectActions.classList.toggle('hidden', targetId !== 'projects-content');
+                navLinks.forEach(n => { const isActive = n.dataset.target === targetId; n.classList.toggle('bg-wine-100', isActive); n.classList.toggle('text-wine-800', isActive); n.classList.toggle('text-slate-600', !isActive); });
+            }
+            navLinks.forEach(link => link.addEventListener('click', e => { e.preventDefault(); switchTab(link.dataset.target); }));
+            switchTab('dashboard-content');
+        });
     </script>
 </body>
 </html>
