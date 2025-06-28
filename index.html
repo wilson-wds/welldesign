@@ -46,6 +46,13 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         .modal-backdrop { transition: opacity 0.3s ease; }
         .modal-content { transition: transform 0.3s ease, opacity 0.3s ease; }
+        /* 文字截斷樣式 */
+        .truncate-text {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
@@ -89,11 +96,13 @@
                     <div class="bg-white rounded-lg shadow-md overflow-x-auto">
                         <table class="w-full text-sm text-left text-slate-600">
                             <thead class="text-xs text-slate-700 uppercase bg-slate-50">
+                                <!-- ===== 更新表頭 ===== -->
                                 <tr>
                                     <th scope="col" class="px-6 py-3">公司 / 統編</th>
                                     <th scope="col" class="px-6 py-3">聯絡人</th>
                                     <th scope="col" class="px-6 py-3">連絡電話</th>
-                                    <th scope="col" class="px-6 py-3">狀態</th>
+                                    <th scope="col" class="px-6 py-3">地址</th>
+                                    <th scope="col" class="px-6 py-3">備註</th>
                                     <th scope="col" class="px-6 py-3 text-center">操作</th>
                                 </tr>
                             </thead>
@@ -110,12 +119,13 @@
         </main>
     </div>
 
-    <!-- ===== 新增客戶 Modal ===== -->
+    <!-- ===== 新增/編輯客戶 Modals ===== -->
+    <!-- 新增客戶 Modal -->
     <div id="add-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none">
         <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10">
             <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">新增客戶</h3><button id="add-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div>
             <form id="add-customer-form">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div><label for="companyName" class="block text-sm font-medium text-slate-700">公司名稱*</label><input type="text" id="companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
                     <div><label for="taxId" class="block text-sm font-medium text-slate-700">統一編號</label><input type="text" id="taxId" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div>
                     <div><label for="contactPerson" class="block text-sm font-medium text-slate-700">聯絡人*</label><input type="text" id="contactPerson" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div>
@@ -134,7 +144,7 @@
         </div>
     </div>
     
-    <!-- ===== 編輯客戶 Modal ===== -->
+    <!-- 編輯客戶 Modal -->
     <div id="edit-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none">
         <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10">
             <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">編輯客戶資料</h3><button id="edit-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div>
@@ -187,7 +197,7 @@
         customerCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
             customerListBody.innerHTML = ''; 
             if (snapshot.empty) {
-                customerListBody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-slate-500">尚無客戶資料，點擊右上角新增第一位客戶吧！</td></tr>`;
+                customerListBody.innerHTML = `<tr><td colspan="6" class="text-center p-8 text-slate-500">尚無客戶資料，點擊右上角新增第一位客戶吧！</td></tr>`;
                 customerCount.textContent = '總共找到 0 位客戶';
                 dashboardCustomerCount.textContent = '0';
                 return;
@@ -201,15 +211,9 @@
                 const customer = doc.data();
                 const id = doc.id; 
                 
-                let statusBadge;
-                switch(customer.status) {
-                    case '活躍客戶': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-wine-800 bg-wine-100 rounded-full">${customer.status}</span>`; break;
-                    case '潛在客戶': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-amber-800 bg-amber-100 rounded-full">${customer.status}</span>`; break;
-                    default: statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-slate-800 bg-slate-200 rounded-full">${customer.status || 'N/A'}</span>`; break;
-                }
-
                 const row = document.createElement('tr');
                 row.className = 'bg-white border-b hover:bg-slate-50';
+                // ===== 更新列表顯示內容 =====
                 row.innerHTML = `
                     <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
                         <div class="font-bold">${customer.companyName}</div>
@@ -217,7 +221,12 @@
                     </td>
                     <td class="px-6 py-4">${customer.contactPerson}</td>
                     <td class="px-6 py-4">${customer.phone || 'N/A'}</td>
-                    <td class="px-6 py-4">${statusBadge}</td>
+                    <td class="px-6 py-4">
+                        <div class="truncate-text" title="${customer.address || ''}">${customer.address || 'N/A'}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="truncate-text" title="${customer.notes || ''}">${customer.notes || 'N/A'}</div>
+                    </td>
                     <td class="px-6 py-4 text-center space-x-2">
                         <button data-id="${id}" class="edit-btn font-medium text-wine-700 hover:underline">編輯</button>
                         <button data-id="${id}" class="delete-btn font-medium text-slate-500 hover:underline">刪除</button>
@@ -240,7 +249,7 @@
                 fax: document.getElementById('fax').value,
                 address: document.getElementById('address').value,
                 email: document.getElementById('email').value,
-                notes: document.getElementById('notes').value, // 新增備註
+                notes: document.getElementById('notes').value,
                 status: document.getElementById('status').value,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => closeAddModal()).catch(error => console.error("新增失敗: ", error));
@@ -261,7 +270,7 @@
                 fax: document.getElementById('edit-fax').value,
                 address: document.getElementById('edit-address').value,
                 email: document.getElementById('edit-email').value,
-                notes: document.getElementById('edit-notes').value, // 新增備註
+                notes: document.getElementById('edit-notes').value,
                 status: document.getElementById('edit-status').value,
             };
 
