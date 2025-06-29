@@ -80,7 +80,7 @@
             
             <div class="flex-1 overflow-auto p-8">
                 <div id="dashboard-content" class="content-section">
-                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between"><h3 class="text-slate-500 text-sm font-medium">總客戶數</h3><p id="dashboard-customer-count" class="text-3xl font-bold text-wine-800 mt-2">0</p></div>
                         <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between"><h3 class="text-slate-500 text-sm font-medium">進行中專案</h3><p id="dashboard-project-count" class="text-3xl font-bold text-wine-800 mt-2">0</p></div>
                     </div>
@@ -195,7 +195,7 @@
                         const card = document.createElement('div');
                         card.className = 'bg-white p-4 rounded-lg shadow-sm border cursor-pointer'; card.dataset.id = id;
                         card.innerHTML = `<h4 class="font-bold text-slate-800">${project.projectName}</h4><p class="text-sm text-slate-600 mt-1">${project.customerName || '未指定客戶'}</p><div class="text-xs text-slate-500 mt-3"><span>截止日期:</span><span>${project.deadline || 'N/A'}</span></div>`;
-                        card.addEventListener('click', () => openProjectModal('edit', doc));
+                        card.addEventListener('click', () => handleOpenProjectModal('edit', doc));
                         if(project.status === '進行中'){ inprogressColumn.appendChild(card); inProgressCount++; } 
                         else if (project.status === '已完成') { completedColumn.appendChild(card); }
                         else { planningColumn.appendChild(card); }
@@ -372,6 +372,10 @@
                 } // 編輯模式未來實作
             }
 
+            // --- 8. 初始化執行 ---
+            setupEventListeners();
+            initDataListeners();
+            switchTab('dashboard-content');
         });
     </script>
 </body>
