@@ -170,15 +170,25 @@
             auth.onAuthStateChanged(user => {
                 loadingContainer.classList.add('hidden'); // 收到驗證狀態後，隱藏載入畫面
                 if (user) {
+                    // 使用者已登入
                     loginContainer.classList.add('hidden');
                     appContainer.classList.remove('hidden');
-                    userProfileEl.innerHTML = `<img src="${user.photoURL}" alt="${user.displayName}" class="w-9 h-9 rounded-full"><div><div class="text-sm font-medium text-slate-700">${user.displayName}</div><div class="text-xs text-slate-500">${user.email}</div></div>`;
+                    userProfileEl.innerHTML = `
+                        <img src="${user.photoURL}" alt="${user.displayName}" class="w-9 h-9 rounded-full">
+                        <div>
+                           <div class="text-sm font-medium text-slate-700">${user.displayName}</div>
+                           <div class="text-xs text-slate-500">${user.email}</div>
+                        </div>`;
+                    
+                    // 啟動資料庫監聽
                     initDataListeners();
                     switchTab('dashboard-content');
                 } else {
+                    // 使用者未登入
                     loginContainer.classList.remove('hidden');
                     appContainer.classList.add('hidden');
                     userProfileEl.innerHTML = '';
+                    // 停止資料庫監聽
                     if (unsubscribeCustomers) unsubscribeCustomers();
                     if (unsubscribeProjects) unsubscribeProjects();
                 }
