@@ -160,12 +160,12 @@
         </main>
     </div>
 
-    <!-- Modals (此處省略以保持簡潔) -->
-    <div id="add-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"></div>
-    <div id="edit-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"></div>
-    <div id="project-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"></div>
-    <div id="invoice-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"></div>
-    <div id="event-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"></div>
+    <!-- Modals -->
+    <div id="add-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">新增客戶</h3><button id="add-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="add-customer-form"><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="companyName" class="block text-sm font-medium text-slate-700">公司名稱*</label><input type="text" id="companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="taxId" class="block text-sm font-medium text-slate-700">統一編號</label><input type="text" id="taxId" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="contactPerson" class="block text-sm font-medium text-slate-700">聯絡人*</label><input type="text" id="contactPerson" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="phone" class="block text-sm font-medium text-slate-700">連絡電話</label><input type="tel" id="phone" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="fax" class="block text-sm font-medium text-slate-700">傳真</label><input type="tel" id="fax" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="email" class="block text-sm font-medium text-slate-700">電子郵件*</label><input type="email" id="email" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div class="md:col-span-2"><label for="address" class="block text-sm font-medium text-slate-700">地址</label><input type="text" id="address" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div class="md:col-span-2"><label for="notes" class="block text-sm font-medium text-slate-700">備註</label><textarea id="notes" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></textarea></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" id="add-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900">儲存客戶</button></div></form></div></div>
+    <div id="edit-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">編輯客戶資料</h3><button id="edit-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="edit-customer-form"><input type="hidden" id="edit-customerId"><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="edit-companyName" class="block text-sm font-medium text-slate-700">公司名稱*</label><input type="text" id="edit-companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="edit-taxId" class="block text-sm font-medium text-slate-700">統一編號</label><input type="text" id="edit-taxId" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="edit-contactPerson" class="block text-sm font-medium text-slate-700">聯絡人*</label><input type="text" id="edit-contactPerson" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="edit-phone" class="block text-sm font-medium text-slate-700">連絡電話</label><input type="tel" id="edit-phone" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="edit-fax" class="block text-sm font-medium text-slate-700">傳真</label><input type="tel" id="edit-fax" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="edit-email" class="block text-sm font-medium text-slate-700">電子郵件*</label><input type="email" id="edit-email" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div class="md:col-span-2"><label for="edit-address" class="block text-sm font-medium text-slate-700">地址</label><input type="text" id="edit-address" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div class="md:col-span-2"><label for="edit-notes" class="block text-sm font-medium text-slate-700">備註</label><textarea id="edit-notes" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></textarea></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" id="edit-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900">更新客戶</button></div></form></div></div>
+    <div id="project-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 id="project-modal-title" class="text-xl font-bold text-slate-800"></h3><button id="project-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="project-form"><input type="hidden" id="projectId"><div class="space-y-4"><div><label for="projectName" class="block text-sm font-medium text-slate-700">專案名稱*</label><input type="text" id="projectName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="projectCustomer" class="block text-sm font-medium text-slate-700">關聯客戶*</label><select id="projectCustomer" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></select></div><div><label for="projectDeadline" class="block text-sm font-medium text-slate-700">截止日期</label><input type="date" id="projectDeadline" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="projectStatus" class="block text-sm font-medium text-slate-700">專案狀態</label><select id="projectStatus" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>規劃中</option><option>進行中</option><option>已完成</option></select></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" id="project-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" id="project-modal-submit-btn" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900"></button></div></form></div></div>
+    <div id="invoice-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-4xl opacity-0 -translate-y-10 print-area"><div class="flex justify-between items-center mb-6 p-6 border-b no-print"><h3 id="invoice-modal-title" class="text-xl font-bold text-slate-800"></h3><div><button id="print-invoice-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none p-2 mr-2 hidden">🖨️</button><button id="invoice-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div></div><form id="invoice-form" class="max-h-[70vh] overflow-y-auto p-6 pr-2"><input type="hidden" id="invoiceId"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"><div><label for="invoiceCustomer" class="block text-sm font-medium text-slate-700">客戶*</label><select id="invoiceCustomer" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></select></div><div><label for="invoiceProject" class="block text-sm font-medium text-slate-700">關聯專案</label><select id="invoiceProject" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></select></div><div><label for="invoiceNumber" class="block text-sm font-medium text-slate-700">帳單號碼*</label><input type="text" id="invoiceNumber" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="invoiceIssueDate" class="block text-sm font-medium text-slate-700">開立日期</label><input type="date" id="invoiceIssueDate" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="invoiceStatus" class="block text-sm font-medium text-slate-700">狀態</label><select id="invoiceStatus" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>草稿</option><option>已傳送</option><option>已付款</option><option>已逾期</option></select></div><div><label for="invoiceCloseDate" class="block text-sm font-medium text-slate-700">結案日期</label><input type="date" id="invoiceCloseDate" class="mt-1 block w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-md shadow-sm" readonly></div></div><div class="mb-4"><h4 class="text-lg font-semibold text-slate-800 mb-2">服務項目</h4><div id="invoice-items-container" class="space-y-2"></div><button type="button" id="add-invoice-item-btn" class="mt-2 text-sm text-wine-700 font-semibold hover:text-wine-900 no-print">+ 新增項目</button></div><div class="flex justify-end mt-6 border-t pt-4"><div class="w-full md:w-1/3 text-right"><div class="flex justify-between"><span class="font-semibold text-slate-600">總計:</span><span id="invoice-total-amount" class="font-bold text-xl text-slate-800">$0.00</span></div></div></div><div class="mt-8 flex justify-end space-x-3 no-print" id="invoice-modal-footer"><button type="button" id="invoice-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" id="invoice-modal-submit-btn" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900"></button></div></form></div></div>
+    <div id="event-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 id="event-modal-title" class="text-xl font-bold text-slate-800"></h3><button id="event-modal-close-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="event-form"><input type="hidden" id="eventId"><input type="hidden" id="eventDate"><div class="space-y-4"><div><label for="eventTitle" class="block text-sm font-medium text-slate-700">事件標題*</label><input type="text" id="eventTitle" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="eventCustomer" class="block text-sm font-medium text-slate-700">關聯客戶</label><select id="eventCustomer" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></select></div><div><label for="eventProject" class="block text-sm font-medium text-slate-700">關聯專案</label><select id="eventProject" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></select></div><div><label for="eventNotes" class="block text-sm font-medium text-slate-700">備註</label><textarea id="eventNotes" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></textarea></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" id="event-modal-delete-btn" class="hidden px-4 py-2 bg-red-100 text-red-700 rounded-md hover:bg-red-200 mr-auto">刪除</button><button type="button" id="event-modal-cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" id="event-modal-submit-btn" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900">儲存</button></div></form></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
@@ -188,7 +188,8 @@
             // --- 3. Chart.js 實體 ---
             let revenueChart = null, customerChart = null, projectChart = null;
             
-            // --- 4. 頁籤切換 ---
+            // --- 4. 函式定義 ---
+            // 頁籤切換
             function switchTab(targetId) {
                 document.querySelectorAll('.content-section').forEach(s => s.classList.toggle('hidden', s.id !== targetId));
                 document.getElementById('main-header-title').textContent = {'dashboard-content': '儀表板', 'customers-content': '客戶管理', 'projects-content': '專案管理', 'calendar-content': '行事曆', 'billing-content': '帳務管理', 'reports-content': '報表分析', 'settings-content': '設定'}[targetId];
@@ -198,22 +199,111 @@
                 document.querySelectorAll('.nav-link').forEach(n => { const isActive = n.dataset.target === targetId; n.classList.toggle('bg-wine-100', isActive); n.classList.toggle('text-wine-800', isActive); n.classList.toggle('text-slate-600', !isActive); });
                 if (targetId === 'reports-content') { renderCharts(); }
             }
-            
-            // --- 5. 資料庫監聽總管 ---
+
+            // 資料庫監聽總管
             function initDataListeners() {
-                // ... 所有資料監聽的程式碼 ...
+                // 客戶監聽
+                customerCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                    const listBody = document.getElementById('customer-list-body');
+                    const countEl = document.getElementById('customer-count');
+                    const dashboardCountEl = document.getElementById('dashboard-customer-count');
+                    listBody.innerHTML = '';
+                    if (snapshot.empty) {
+                        listBody.innerHTML = `<tr><td colspan="6" class="text-center p-8 text-slate-500">尚無客戶資料</td></tr>`;
+                        if(countEl) countEl.textContent = '總共找到 0 位客戶';
+                        if(dashboardCountEl) dashboardCountEl.textContent = '0';
+                        return;
+                    }
+                    const count = snapshot.size;
+                    if(countEl) countEl.textContent = `總共找到 ${count} 位客戶`;
+                    if(dashboardCountEl) dashboardCountEl.textContent = count;
+                    snapshot.forEach(doc => {
+                        const customer = doc.data(); const id = doc.id;
+                        const row = document.createElement('tr');
+                        row.className = 'bg-white border-b hover:bg-slate-50';
+                        row.innerHTML = `<td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap"><div class="font-bold">${customer.companyName}</div><div class="text-xs text-slate-500">統編: ${customer.taxId || 'N/A'}</div></td><td class="px-6 py-4">${customer.contactPerson}</td><td class="px-6 py-4">${customer.phone || 'N/A'}</td><td class="px-6 py-4"><div class="truncate-text" title="${customer.address || ''}">${customer.address || 'N/A'}</div></td><td class="px-6 py-4"><div class="truncate-text" title="${customer.notes || ''}">${customer.notes || 'N/A'}</div></td><td class="px-6 py-4 text-center space-x-2"><button data-id="${id}" class="edit-btn font-medium text-wine-700 hover:underline">編輯</button><button data-id="${id}" class="delete-btn font-medium text-slate-500 hover:underline">刪除</button></td>`;
+                        listBody.appendChild(row);
+                    });
+                });
+
+                // 專案監聽
+                projectCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                    const planningColumn = document.getElementById('planning-column');
+                    const inprogressColumn = document.getElementById('inprogress-column');
+                    const completedColumn = document.getElementById('completed-column');
+                    const dashboardProjectCountEl = document.getElementById('dashboard-project-count');
+                    planningColumn.innerHTML = ''; inprogressColumn.innerHTML = ''; completedColumn.innerHTML = '';
+                    let inProgressCount = 0;
+                    snapshot.forEach(doc => {
+                        const project = doc.data(); const id = doc.id;
+                        const card = document.createElement('div');
+                        card.className = 'bg-white p-4 rounded-lg shadow-sm border cursor-pointer'; card.dataset.id = id;
+                        card.innerHTML = `<h4 class="font-bold text-slate-800">${project.projectName}</h4><p class="text-sm text-slate-600 mt-1">${project.customerName || '未指定客戶'}</p><div class="text-xs text-slate-500 mt-3"><span>截止日期:</span><span>${project.deadline || 'N/A'}</span></div>`;
+                        card.addEventListener('click', () => handleOpenProjectModal('edit', doc));
+                        if(project.status === '進行中'){ inprogressColumn.appendChild(card); inProgressCount++; } 
+                        else if (project.status === '已完成') { completedColumn.appendChild(card); }
+                        else { planningColumn.appendChild(card); }
+                    });
+                    dashboardProjectCountEl.textContent = inProgressCount;
+                });
+
+                // 帳務監聽
+                invoiceCollection.onSnapshot(snapshot => {
+                    const invoiceListBody = document.getElementById('invoice-list-body');
+                    invoiceListBody.innerHTML = '';
+                    let totalRevenue = 0, paidAmount = 0, unpaidAmount = 0;
+                    if (snapshot.empty) {
+                        invoiceListBody.innerHTML = `<tr><td colspan="6" class="text-center p-8 text-slate-500">尚無帳務資料</td></tr>`;
+                        document.getElementById('invoice-count').textContent = '總共找到 0 筆資料';
+                    } else {
+                        document.getElementById('invoice-count').textContent = `總共找到 ${snapshot.size} 筆資料`;
+                        snapshot.docs.sort((a,b) => (b.data().issueDate || '').localeCompare(a.data().issueDate || '')).forEach(doc => {
+                            const invoice = doc.data(); const id = doc.id;
+                            let statusBadge;
+                            switch(invoice.status) {
+                                case '已付款': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">已付款</span>`; paidAmount += invoice.totalAmount; break;
+                                case '已傳送': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">已傳送</span>`; unpaidAmount += invoice.totalAmount; break;
+                                case '已逾期': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">已逾期</span>`; unpaidAmount += invoice.totalAmount; break;
+                                default: statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-slate-800 bg-slate-200 rounded-full">草稿</span>`; break;
+                            }
+                            if(invoice.status !== '草稿') { totalRevenue += invoice.totalAmount; }
+                            const row = document.createElement('tr');
+                            row.className = 'bg-white border-b hover:bg-slate-50';
+                            row.innerHTML = `<td class="px-6 py-4 font-bold text-wine-800">${invoice.invoiceNumber || 'N/A'}</td><td class="px-6 py-4 font-medium text-slate-900"><div class="font-bold">${invoice.customerName || 'N/A'}</div><div class="text-xs text-slate-500">${invoice.projectName || ''}</div></td><td class="px-6 py-4"><div class="font-medium">開立: ${invoice.issueDate || 'N/A'}</div><div class="text-xs text-slate-500">結案: ${invoice.closeDate || ''}</div></td><td class="px-6 py-4 font-semibold">$${new Intl.NumberFormat().format(invoice.totalAmount || 0)}</td><td class="px-6 py-4">${statusBadge}</td><td class="px-6 py-4 text-center space-x-2"><button data-id="${id}" class="view-invoice-btn font-medium text-blue-600 hover:underline">查看</button><button data-id="${id}" class="edit-invoice-btn font-medium text-wine-700 hover:underline">編輯</button><button data-id="${id}" class="delete-invoice-btn font-medium text-slate-500 hover:underline">刪除</button></td>`;
+                            invoiceListBody.appendChild(row);
+                        });
+                    }
+                    document.getElementById('dashboard-revenue').textContent = `$${new Intl.NumberFormat().format(totalRevenue)}`;
+                    document.getElementById('dashboard-paid').textContent = `$${new Intl.NumberFormat().format(paidAmount)}`;
+                    document.getElementById('dashboard-unpaid').textContent = `$${new Intl.NumberFormat().format(unpaidAmount)}`;
+                });
+
+                // 活動監聽
+                activityCollection.orderBy('timestamp', 'desc').limit(5).onSnapshot(snapshot => {
+                    const logEl = document.getElementById('activity-log');
+                    logEl.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const log = doc.data();
+                        const time = log.timestamp ? log.timestamp.toDate().toLocaleString('zh-TW') : 'N/A';
+                        const li = document.createElement('li');
+                        li.className = 'flex items-center space-x-4 border-b pb-2';
+                        li.innerHTML = `<div><p class="font-medium text-slate-700">${log.message}</p><p class="text-sm text-slate-500">${time}</p></div>`;
+                        logEl.appendChild(li);
+                    });
+                });
             }
             
+            // ... Modal 相關函式 ...
+            // ... 報表分析函式 ...
+            // ... 行事曆函式 ...
+
             // --- 6. 事件綁定總管 ---
             function initEventListeners() {
                 document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); switchTab(link.dataset.target); }));
                 // ... 所有按鈕與表單的事件綁定 ...
             }
-
-            // --- 7. 所有其他函式 ---
-            // ... Modal 相關, 圖表, 行事曆等所有函式 ...
-
-            // --- 8. 初始化執行 ---
+            
+            // --- 7. 初始化執行 ---
             initEventListeners();
             initDataListeners();
             switchTab('dashboard-content');
