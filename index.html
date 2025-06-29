@@ -51,32 +51,9 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
-    <!-- ===== 載入畫面 ===== -->
-    <div id="loading-container" class="flex items-center justify-center h-screen">
-        <div class="text-center">
-            <svg class="animate-spin h-8 w-8 text-wine-800 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p class="text-lg text-slate-600 mt-4">正在驗證您的身分...</p>
-        </div>
-    </div>
-
-    <!-- ===== 登入畫面 ===== -->
-    <div id="login-container" class="hidden flex items-center justify-center h-screen">
-        <div class="text-center p-8 bg-white shadow-lg rounded-lg">
-            <img src="https://i.ibb.co/7ttRLCcK/120x120.jpg" alt="威爾設計工作室 LOGO" class="w-24 h-24 rounded-full mx-auto mb-4">
-            <h1 class="text-2xl font-bold text-slate-800 mb-2">威爾設計工作室 CRM</h1>
-            <p class="text-slate-600 mb-6">請登入以繼續</p>
-            <button id="google-login-btn" class="flex items-center justify-center w-full bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-2.5 px-4 rounded-lg transition-colors shadow-sm">
-                <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C39.904,36.218,44,30.668,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
-                使用 Google 登入
-            </button>
-        </div>
-    </div>
     
-    <!-- ===== 主應用程式畫面 (初始隱藏) ===== -->
-    <div id="app-container" class="hidden flex h-screen">
+    <!-- ===== 主應用程式畫面 ===== -->
+    <div id="app-container" class="flex h-screen">
         <!-- ===== 左側邊欄 ===== -->
         <aside class="w-64 flex-shrink-0 bg-white border-r border-slate-200 flex flex-col">
             <div class="h-28 flex flex-col items-center justify-center border-b border-slate-200 p-4"><img src="https://i.ibb.co/7ttRLCcK/120x120.jpg" alt="威爾設計工作室 LOGO" class="w-16 h-16 rounded-full mb-2"><span class="text-lg font-bold text-slate-700">威爾設計</span></div>
@@ -89,7 +66,6 @@
                 <a href="#" data-target="reports-content" class="nav-link flex items-center px-4 py-2.5 text-sm font-medium rounded-lg"><svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8a6 6 0 0 0-6 0"/><path d="M12.7 14a6 6 0 0 0-6 0"/><path d="M6.7 20a6 6 0 0 0-6 0"/></svg>報表分析</a>
                 <a href="#" data-target="settings-content" class="nav-link flex items-center px-4 py-2.5 text-sm font-medium rounded-lg"><svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>設定</a>
             </nav>
-            <div class="p-4 border-t border-slate-200"><a href="#" id="logout-btn" class="flex items-center w-full px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-lg transition-colors"><svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>登出</a></div>
         </aside>
 
         <main class="flex-1 flex flex-col overflow-hidden">
@@ -98,7 +74,6 @@
                 <div class="flex items-center space-x-6">
                     <div id="project-actions" class="hidden"><button id="add-project-btn" class="flex items-center justify-center bg-wine-800 hover:bg-wine-900 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm"><svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>新增專案</button></div>
                     <div id="customer-actions" class="hidden"><button id="add-customer-btn" class="flex items-center justify-center bg-wine-800 hover:bg-wine-900 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm"><svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>新增客戶</button></div>
-                    <div id="user-profile" class="flex items-center space-x-2"></div>
                 </div>
             </header>
             
@@ -152,65 +127,14 @@
             };
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
-            const auth = firebase.auth();
             
             // --- 2. 元素參考 ---
-            const loadingContainer = document.getElementById('loading-container');
-            const loginContainer = document.getElementById('login-container');
-            const appContainer = document.getElementById('app-container');
-            const googleLoginBtn = document.getElementById('google-login-btn');
-            const logoutBtn = document.getElementById('logout-btn');
-            const userProfileEl = document.getElementById('user-profile');
             const customerCollection = db.collection('customers');
             const projectCollection = db.collection('projects');
-            let unsubscribeCustomers = null;
-            let unsubscribeProjects = null;
-
-            // --- 3. 驗證邏輯 ---
-            auth.onAuthStateChanged(user => {
-                loadingContainer.classList.add('hidden'); // 收到驗證狀態後，隱藏載入畫面
-                if (user) {
-                    // 使用者已登入
-                    loginContainer.classList.add('hidden');
-                    appContainer.classList.remove('hidden');
-                    userProfileEl.innerHTML = `
-                        <img src="${user.photoURL}" alt="${user.displayName}" class="w-9 h-9 rounded-full">
-                        <div>
-                           <div class="text-sm font-medium text-slate-700">${user.displayName}</div>
-                           <div class="text-xs text-slate-500">${user.email}</div>
-                        </div>`;
-                    
-                    // 啟動資料庫監聽
-                    initDataListeners();
-                    switchTab('dashboard-content');
-                } else {
-                    // 使用者未登入
-                    loginContainer.classList.remove('hidden');
-                    appContainer.classList.add('hidden');
-                    userProfileEl.innerHTML = '';
-                    // 停止資料庫監聽
-                    if (unsubscribeCustomers) unsubscribeCustomers();
-                    if (unsubscribeProjects) unsubscribeProjects();
-                }
-            });
-
-            // 處理從 Google 登入後跳轉回來的結果
-            auth.getRedirectResult()
-                .catch((error) => {
-                    console.error("處理登入跳轉失敗:", error);
-                    alert(`登入驗證時發生錯誤: ${error.message}`);
-                    loadingContainer.classList.add('hidden');
-                    loginContainer.classList.remove('hidden');
-                });
-
-            googleLoginBtn.addEventListener('click', () => {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                auth.signInWithRedirect(provider);
-            });
-
-            logoutBtn.addEventListener('click', () => {
-                auth.signOut();
-            });
+            
+            // --- 3. 直接初始化資料監聽 (無登入) ---
+            initDataListeners();
+            switchTab('dashboard-content');
 
             // --- 4. 資料監聽與互動 ---
             function initDataListeners() {
@@ -218,7 +142,7 @@
                 const customerCountEl = document.getElementById('customer-count');
                 const dashboardCustomerCountEl = document.getElementById('dashboard-customer-count');
                 
-                unsubscribeCustomers = customerCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                customerCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
                     customerListBody.innerHTML = ''; 
                     if (snapshot.empty) {
                         customerListBody.innerHTML = `<tr><td colspan="6" class="text-center p-8 text-slate-500">尚無客戶資料</td></tr>`;
@@ -243,7 +167,7 @@
                 const completedColumn = document.getElementById('completed-column');
                 const dashboardProjectCountEl = document.getElementById('dashboard-project-count');
                 
-                unsubscribeProjects = projectCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                projectCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
                     planningColumn.innerHTML = ''; inprogressColumn.innerHTML = ''; completedColumn.innerHTML = '';
                     let inProgressCount = 0;
                     snapshot.forEach(doc => {
