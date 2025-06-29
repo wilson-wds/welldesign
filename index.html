@@ -138,9 +138,9 @@
             const projectCollection = db.collection('projects');
             const invoiceCollection = db.collection('invoices');
 
-            // --- 3. 函式定義 ---
+            // --- 3. 函式定義區 ---
 
-            // 頁籤切換
+            // 頁籤切換函式
             function switchTab(targetId) {
                 document.querySelectorAll('.content-section').forEach(s => s.classList.toggle('hidden', s.id !== targetId));
                 document.getElementById('main-header-title').textContent = {'dashboard-content': '儀表板', 'customers-content': '客戶管理', 'projects-content': '專案管理', 'calendar-content': '行事曆', 'billing-content': '帳務管理', 'reports-content': '報表分析', 'settings-content': '設定'}[targetId];
@@ -150,7 +150,7 @@
                 document.querySelectorAll('.nav-link').forEach(n => { const isActive = n.dataset.target === targetId; n.classList.toggle('bg-wine-100', isActive); n.classList.toggle('text-wine-800', isActive); n.classList.toggle('text-slate-600', !isActive); });
             }
 
-            // 資料庫監聽
+            // 資料庫監聽總管
             function initDataListeners() {
                 // 客戶監聽
                 customerCollection.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
@@ -224,7 +224,7 @@
                 });
             }
             
-            // ... Modal 相關函式 ... (此處省略以保持簡潔)
+            // ... Modal 相關函式 ...
 
             // --- 7. 事件綁定總管 ---
             function initEventListeners() {
