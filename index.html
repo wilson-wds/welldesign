@@ -54,8 +54,44 @@
         @media print {
             body * { visibility: hidden; }
             .print-area, .print-area * { visibility: visible; }
-            .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+            .print-area { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+            }
             .no-print { display: none; }
+
+            /* Styles for printing form elements */
+            .print-area input,
+            .print-area select,
+            .print-area textarea {
+                border: none !important;
+                background-color: transparent !important;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                box-shadow: none !important;
+                padding: 2px;
+                color: black !important;
+            }
+
+            .print-area input:disabled,
+            .print-area select:disabled,
+            .print-area textarea:disabled {
+                -webkit-text-fill-color: black;
+                opacity: 1;
+                color: black !important;
+                background-color: transparent !important;
+            }
+
+            .print-area select {
+                padding-right: 2px !important;
+            }
+
+            .print-area * {
+                color: black !important;
+            }
         }
     </style>
 </head>
