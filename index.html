@@ -493,7 +493,7 @@
             const invoiceModal = document.getElementById('invoice-modal');
             const invoiceForm = document.getElementById('invoice-form');
 
-            async function handleOpenInvoiceModal(mode, doc = null) {
+            async function handleOpenInvoiceModal(mode, invoiceId = null) {
                 invoiceForm.reset();
                 document.getElementById('invoice-items-container').innerHTML = '';
                 document.getElementById('invoice-total-amount').textContent = '$0.00';
@@ -511,10 +511,17 @@
                     invoiceModal.querySelector('#invoiceId').value = '';
                     invoiceModal.querySelector('#invoiceIssueDate').value = new Date().toISOString().split('T')[0];
                     addInvoiceItem(); // Add one item by default
-                } else if (doc) {
+                } else if (invoiceId) {
+                    const doc = await invoiceCollection.doc(invoiceId).get();
+                    if (!doc.exists) {
+                        console.error("Invoice not found");
+                        return;
+                    }
+
                     const invoice = doc.data();
                     const viewOnly = mode === 'view';
                     invoiceModal.querySelector('#invoice-modal-title').textContent = viewOnly ? '查看帳單' : '編輯帳單';
+
                     if (viewOnly) {
                         document.getElementById('print-invoice-btn').classList.remove('hidden');
                         document.querySelectorAll('#invoice-form input, #invoice-form select, #invoice-form textarea').forEach(el => el.disabled = true);
@@ -533,7 +540,9 @@
                     invoiceModal.querySelector('#invoiceStatus').value = invoice.status;
                     invoiceModal.querySelector('#invoiceCloseDate').value = invoice.closeDate || '';
                     
-                    invoice.items.forEach(item => addInvoiceItem(item, viewOnly));
+                    if (invoice.items && Array.isArray(invoice.items)) {
+                        invoice.items.forEach(item => addInvoiceItem(item, viewOnly));
+                    }
                     updateInvoiceTotal();
                 }
                 openModal(invoiceModal);
@@ -882,8 +891,8 @@
                 document.body.addEventListener('click', (e) => {
                     if (e.target.matches('.edit-customer-btn')) handleOpenEditCustomerModal(e.target.dataset.id);
                     if (e.target.matches('.delete-customer-btn')) handleDeleteCustomer(e.target.dataset.id);
-                    if (e.target.matches('.view-invoice-btn')) handleOpenInvoiceModal('view', { id: e.target.dataset.id, data: () => invoiceCollection.doc(e.target.dataset.id).get().then(d => d.data()) });
-                    if (e.target.matches('.edit-invoice-btn')) handleOpenInvoiceModal('edit', { id: e.target.dataset.id, data: () => invoiceCollection.doc(e.target.dataset.id).get().then(d => d.data()) });
+                    if (e.target.matches('.view-invoice-btn')) handleOpenInvoiceModal('view', e.target.dataset.id);
+                    if (e.target.matches('.edit-invoice-btn')) handleOpenInvoiceModal('edit', e.target.dataset.id);
                     if (e.target.matches('.delete-invoice-btn')) handleDeleteInvoice(e.target.dataset.id);
                     if (e.target.matches('.remove-invoice-item-btn')) { e.target.closest('.invoice-item').remove(); updateInvoiceTotal(); }
                 });
