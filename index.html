@@ -92,9 +92,10 @@
             
             <div class="flex-1 overflow-auto p-8">
                 <div id="dashboard-content" class="content-section">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                         <div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-slate-500 text-sm font-medium">總客戶數</h3><p id="dashboard-customer-count" class="text-3xl font-bold text-wine-800 mt-2">0</p></div>
-                        <div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-slate-500 text-sm font-medium">營業額</h3><p id="dashboard-revenue" class="text-3xl font-bold text-slate-800 mt-2">$0</p></div>
+                        <div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-slate-500 text-sm font-medium">當月營業額</h3><p id="dashboard-monthly-revenue" class="text-3xl font-bold text-slate-800 mt-2">$0</p></div>
+                        <div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-slate-500 text-sm font-medium">總營業額</h3><p id="dashboard-total-revenue" class="text-3xl font-bold text-slate-800 mt-2">$0</p></div>
                         <div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-slate-500 text-sm font-medium">已收帳款</h3><p id="dashboard-paid" class="text-3xl font-bold text-green-600 mt-2">$0</p></div>
                         <div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-slate-500 text-sm font-medium">未收帳款</h3><p id="dashboard-unpaid" class="text-3xl font-bold text-wine-800 mt-2">$0</p></div>
                         <div class="bg-white p-6 rounded-lg shadow-md"><h3 class="text-slate-500 text-sm font-medium">進行中專案</h3><p id="dashboard-project-count" class="text-3xl font-bold text-slate-800 mt-2">0</p></div>
@@ -797,18 +798,27 @@
                 }
                 
                 // 更新儀表板統計數據 (基於所有帳務)
-                let totalRevenue = 0, paidAmount = 0, unpaidAmount = 0;
+                let totalRevenue = 0, paidAmount = 0, unpaidAmount = 0, monthlyRevenue = 0;
+                const currentMonth = new Date().toISOString().slice(0, 7);
+
                 allInvoices.forEach(invoice => {
+                    const invoiceMonth = invoice.issueDate ? invoice.issueDate.slice(0, 7) : '';
+
+                    if (invoice.status !== '草稿') {
+                        totalRevenue += invoice.totalAmount || 0;
+                        if(invoiceMonth === currentMonth) {
+                             monthlyRevenue += invoice.totalAmount || 0;
+                        }
+                    }
+
                     if (invoice.status === '已付款') {
                         paidAmount += invoice.totalAmount || 0;
                     } else if (invoice.status === '已傳送' || invoice.status === '已逾期') {
                         unpaidAmount += invoice.totalAmount || 0;
                     }
-                    if (invoice.status !== '草稿') {
-                        totalRevenue += invoice.totalAmount || 0;
-                    }
                 });
-                document.getElementById('dashboard-revenue').textContent = `$${new Intl.NumberFormat().format(totalRevenue)}`;
+                document.getElementById('dashboard-total-revenue').textContent = `$${new Intl.NumberFormat().format(totalRevenue)}`;
+                document.getElementById('dashboard-monthly-revenue').textContent = `$${new Intl.NumberFormat().format(monthlyRevenue)}`;
                 document.getElementById('dashboard-paid').textContent = `$${new Intl.NumberFormat().format(paidAmount)}`;
                 document.getElementById('dashboard-unpaid').textContent = `$${new Intl.NumberFormat().format(unpaidAmount)}`;
             }
@@ -821,13 +831,13 @@
                 const invoiceSnapshot = await invoiceCollection.where('status', '!=', '草稿').get();
                 const projectSnapshot = await projectCollection.get();
 
-                const monthlyRevenue = {};
+                const monthlyRevenueData = {};
                 const customerContribution = {};
                 invoiceSnapshot.forEach(doc => {
                     const invoice = doc.data();
                     if(!invoice.issueDate) return;
                     const month = invoice.issueDate.substring(0, 7);
-                    monthlyRevenue[month] = (monthlyRevenue[month] || 0) + invoice.totalAmount;
+                    monthlyRevenueData[month] = (monthlyRevenueData[month] || 0) + invoice.totalAmount;
                     customerContribution[invoice.customerName] = (customerContribution[invoice.customerName] || 0) + invoice.totalAmount;
                 });
 
@@ -837,7 +847,7 @@
                     projectStatusCounts[status]++;
                 });
 
-                renderRevenueChart(monthlyRevenue);
+                renderRevenueChart(monthlyRevenueData);
                 renderCustomerChart(customerContribution);
                 renderProjectStatusChart(projectStatusCounts);
             }
