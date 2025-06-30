@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>威爾設計工作室 CRM</title>
     
-    <!-- 引入 Chart.js 圖表庫 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
         tailwind.config = {
@@ -431,15 +428,28 @@
                 }
             }
 
-            // ... (其他所有 Modal 和表單處理函式)
+            // Modal 相關函式
+            async function populateCustomerDropdown(selectElement) { selectElement.innerHTML = '<option value="">請選擇客戶</option>'; const snapshot = await customerCollection.orderBy("companyName").get(); snapshot.forEach(doc => { const option = document.createElement('option'); option.value = doc.id; option.textContent = doc.data().companyName; option.dataset.name = doc.data().companyName; selectElement.appendChild(option); }); }
+            async function populateProjectDropdown(customerId, selectElement) {
+                selectElement.innerHTML = '<option value="">無關聯專案</option>';
+                if(!customerId) return;
+                const snapshot = await projectCollection.where("customerId", "==", customerId).get();
+                snapshot.forEach(doc => {
+                    const option = document.createElement('option');
+                    option.value = doc.id;
+                    option.textContent = doc.data().projectName;
+                    option.dataset.name = doc.data().projectName;
+                    selectElement.appendChild(option);
+                });
+            }
 
-            // --- 6. 事件綁定總管 ---
+            // 事件綁定總管
             function initEventListeners() {
                 document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); switchTab(link.dataset.target); }));
                 // ... (所有按鈕與表單的事件綁定)
             }
             
-            // --- 7. 初始化執行 ---
+            // --- 初始化執行 ---
             initEventListeners();
             initDataListeners();
             initCalendar();
