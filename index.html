@@ -131,7 +131,25 @@
                     <div id="calendar-grid" class="grid grid-cols-7 gap-px bg-slate-200"></div>
                 </div>
                 <div id="billing-content" class="content-section hidden">
-                     <div class="flex justify-between items-center mb-6"><p id="invoice-count" class="text-sm text-slate-500"></p></div>
+                    <div class="flex flex-wrap gap-4 justify-between items-center mb-6">
+                        <p id="invoice-count" class="text-sm text-slate-500"></p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 items-center">
+                            <input type="text" id="invoice-search" placeholder="搜尋客戶/專案/單號..." class="w-48 px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500">
+                            <select id="invoice-filter-status" class="px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500">
+                                <option value="all">全部狀態</option>
+                                <option value="草稿">草稿</option>
+                                <option value="已傳送">已傳送</option>
+                                <option value="已付款">已付款</option>
+                                <option value="已逾期">已逾期</option>
+                            </select>
+                            <select id="invoice-sort" class="px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500">
+                                <option value="issueDate-desc">開立日期 (新到舊)</option>
+                                <option value="issueDate-asc">開立日期 (舊到新)</option>
+                                <option value="totalAmount-desc">金額 (高到低)</option>
+                                <option value="totalAmount-asc">金額 (低到高)</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="bg-white rounded-lg shadow-md overflow-x-auto">
                         <table class="w-full text-sm text-left text-slate-600">
                             <thead class="text-xs text-slate-700 uppercase bg-slate-50">
@@ -176,7 +194,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // --- 1. 初始化 Firebase ---
-            // 您的 Firebase 設定物件
             const firebaseConfig = { apiKey: "AIzaSyCdpojQ8seLBEXJCjb26uzdBAUT8e7JNL0", authDomain: "will-design-crm.firebaseapp.com", projectId: "will-design-crm", storageBucket: "will-design-crm.appspot.com", messagingSenderId: "129830855502", appId: "1:129830855502:web:de4bcd5e0a7122b3cb741f" };
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
@@ -194,10 +211,12 @@
 
             // --- 4. 全局變數 ---
             let currentDate = new Date();
+            let allInvoices = []; // 用於儲存所有帳務資料以進行前端篩選和排序
+            let currentSort = 'issueDate-desc';
+            let currentStatusFilter = 'all';
+            let currentSearchTerm = '';
 
             // --- 5. 實用工具 & UI 函式 ---
-
-            // 開啟 Modal
             function openModal(modal) {
                 const modalContent = modal.querySelector('.modal-content');
                 modal.classList.remove('pointer-events-none');
@@ -207,7 +226,6 @@
                 modalContent.classList.remove('opacity-0', '-translate-y-10');
             }
 
-            // 關閉 Modal
             function closeModal(modal) {
                 const modalContent = modal.querySelector('.modal-content');
                 modal.classList.add('opacity-0');
@@ -217,7 +235,6 @@
                 setTimeout(() => modal.classList.add('pointer-events-none'), 300);
             }
             
-            // 記錄活動
             async function logActivity(message) {
                 try {
                     await activityCollection.add({
@@ -229,7 +246,6 @@
                 }
             }
 
-            // 頁籤切換
             function switchTab(targetId) {
                 document.querySelectorAll('.content-section').forEach(s => s.classList.toggle('hidden', s.id !== targetId));
                 const titles = {'dashboard-content': '儀表板', 'customers-content': '客戶管理', 'projects-content': '專案管理', 'calendar-content': '行事曆', 'billing-content': '帳務管理', 'reports-content': '報表分析', 'settings-content': '設定'};
@@ -300,45 +316,17 @@
                     dashboardProjectCountEl.textContent = inProgressCount;
                 });
 
-                // 帳務監聽
+                // 帳務監聽 (只獲取一次資料，然後交給前端處理)
                 invoiceCollection.onSnapshot(snapshot => {
-                    const invoiceListBody = document.getElementById('invoice-list-body');
-                    const invoiceCountEl = document.getElementById('invoice-count');
-                    if(!invoiceListBody || !invoiceCountEl) return;
-                    invoiceListBody.innerHTML = '';
-                    let totalRevenue = 0, paidAmount = 0, unpaidAmount = 0;
-
-                    if (snapshot.empty) {
-                        invoiceListBody.innerHTML = `<tr><td colspan="6" class="text-center p-8 text-slate-500">尚無帳務資料</td></tr>`;
-                        invoiceCountEl.textContent = '總共找到 0 筆資料';
-                    } else {
-                        invoiceCountEl.textContent = `總共找到 ${snapshot.size} 筆資料`;
-                        snapshot.docs.sort((a,b) => (b.data().issueDate || '').localeCompare(a.data().issueDate || '')).forEach(doc => {
-                            const invoice = doc.data(); const id = doc.id;
-                            let statusBadge;
-                            switch(invoice.status) {
-                                case '已付款': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">已付款</span>`; paidAmount += invoice.totalAmount; break;
-                                case '已傳送': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">已傳送</span>`; unpaidAmount += invoice.totalAmount; break;
-                                case '已逾期': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">已逾期</span>`; unpaidAmount += invoice.totalAmount; break;
-                                default: statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-slate-800 bg-slate-200 rounded-full">草稿</span>`; break;
-                            }
-                            if(invoice.status !== '草稿') { totalRevenue += invoice.totalAmount; }
-                            const row = document.createElement('tr');
-                            row.className = 'bg-white border-b hover:bg-slate-50';
-                            row.innerHTML = `<td class="px-6 py-4 font-bold text-wine-800">${invoice.invoiceNumber || 'N/A'}</td><td class="px-6 py-4 font-medium text-slate-900"><div class="font-bold">${invoice.customerName || 'N/A'}</div><div class="text-xs text-slate-500">${invoice.projectName || ''}</div></td><td class="px-6 py-4"><div class="font-medium">開立: ${invoice.issueDate || 'N/A'}</div><div class="text-xs text-slate-500">結案: ${invoice.closeDate || ''}</div></td><td class="px-6 py-4 font-semibold">$${new Intl.NumberFormat().format(invoice.totalAmount || 0)}</td><td class="px-6 py-4">${statusBadge}</td><td class="px-6 py-4 text-center space-x-2"><button data-id="${id}" class="view-invoice-btn font-medium text-blue-600 hover:underline">查看</button><button data-id="${id}" class="edit-invoice-btn font-medium text-wine-700 hover:underline">編輯</button><button data-id="${id}" class="delete-invoice-btn font-medium text-slate-500 hover:underline">刪除</button></td>`;
-                            invoiceListBody.appendChild(row);
-                        });
-                    }
-                    document.getElementById('dashboard-revenue').textContent = `$${new Intl.NumberFormat().format(totalRevenue)}`;
-                    document.getElementById('dashboard-paid').textContent = `$${new Intl.NumberFormat().format(paidAmount)}`;
-                    document.getElementById('dashboard-unpaid').textContent = `$${new Intl.NumberFormat().format(unpaidAmount)}`;
+                    allInvoices = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderInvoices(); // 初始渲染
                 });
 
                 // 活動監聽
                 activityCollection.orderBy('timestamp', 'desc').limit(5).onSnapshot(snapshot => {
                     const logEl = document.getElementById('activity-log');
                     if(!logEl) return;
-                    logEl.innerHTML = '<li></li>'; // Placeholder
+                    logEl.innerHTML = '';
                     snapshot.forEach(doc => {
                         const log = doc.data();
                         const time = log.timestamp ? log.timestamp.toDate().toLocaleString('zh-TW', { dateStyle: 'short', timeStyle: 'short' }) : 'N/A';
@@ -738,7 +726,85 @@
             });
 
 
-            // --- 8. 報表 & 行事曆渲染 ---
+            // --- 8. 報表、行事曆、帳務列表渲染 ---
+            function renderInvoices() {
+                const invoiceListBody = document.getElementById('invoice-list-body');
+                const invoiceCountEl = document.getElementById('invoice-count');
+                if (!invoiceListBody || !invoiceCountEl) return;
+
+                // 1. 篩選
+                let filteredInvoices = allInvoices;
+                if (currentStatusFilter !== 'all') {
+                    filteredInvoices = filteredInvoices.filter(inv => inv.status === currentStatusFilter);
+                }
+                if (currentSearchTerm) {
+                    const lowerCaseSearchTerm = currentSearchTerm.toLowerCase();
+                    filteredInvoices = filteredInvoices.filter(inv =>
+                        (inv.customerName && inv.customerName.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                        (inv.projectName && inv.projectName.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                        (inv.invoiceNumber && inv.invoiceNumber.toLowerCase().includes(lowerCaseSearchTerm))
+                    );
+                }
+
+                // 2. 排序
+                const [sortKey, sortDir] = currentSort.split('-');
+                filteredInvoices.sort((a, b) => {
+                    let valA = a[sortKey];
+                    let valB = b[sortKey];
+
+                    if (sortKey === 'totalAmount') {
+                        valA = valA || 0;
+                        valB = valB || 0;
+                    } else { // Assuming date string for issueDate
+                        valA = valA || '';
+                        valB = valB || '';
+                    }
+
+                    if (valA < valB) return sortDir === 'asc' ? -1 : 1;
+                    if (valA > valB) return sortDir === 'asc' ? 1 : -1;
+                    return 0;
+                });
+
+                // 3. 渲染
+                invoiceListBody.innerHTML = '';
+                if (filteredInvoices.length === 0) {
+                    invoiceListBody.innerHTML = `<tr><td colspan="6" class="text-center p-8 text-slate-500">找不到符合條件的資料</td></tr>`;
+                    invoiceCountEl.textContent = `顯示 0 筆資料 (共 ${allInvoices.length} 筆)`;
+                } else {
+                    invoiceCountEl.textContent = `顯示 ${filteredInvoices.length} 筆資料 (共 ${allInvoices.length} 筆)`;
+                    filteredInvoices.forEach(invoice => {
+                        const { id, ...data } = invoice;
+                        let statusBadge;
+                        switch (data.status) {
+                            case '已付款': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">已付款</span>`; break;
+                            case '已傳送': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">已傳送</span>`; break;
+                            case '已逾期': statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">已逾期</span>`; break;
+                            default: statusBadge = `<span class="px-2 py-1 text-xs font-semibold text-slate-800 bg-slate-200 rounded-full">草稿</span>`; break;
+                        }
+                        const row = document.createElement('tr');
+                        row.className = 'bg-white border-b hover:bg-slate-50';
+                        row.innerHTML = `<td class="px-6 py-4 font-bold text-wine-800">${data.invoiceNumber || 'N/A'}</td><td class="px-6 py-4 font-medium text-slate-900"><div class="font-bold">${data.customerName || 'N/A'}</div><div class="text-xs text-slate-500">${data.projectName || ''}</div></td><td class="px-6 py-4"><div class="font-medium">開立: ${data.issueDate || 'N/A'}</div><div class="text-xs text-slate-500">結案: ${data.closeDate || ''}</div></td><td class="px-6 py-4 font-semibold">$${new Intl.NumberFormat().format(data.totalAmount || 0)}</td><td class="px-6 py-4">${statusBadge}</td><td class="px-6 py-4 text-center space-x-2"><button data-id="${id}" class="view-invoice-btn font-medium text-blue-600 hover:underline">查看</button><button data-id="${id}" class="edit-invoice-btn font-medium text-wine-700 hover:underline">編輯</button><button data-id="${id}" class="delete-invoice-btn font-medium text-slate-500 hover:underline">刪除</button></td>`;
+                        invoiceListBody.appendChild(row);
+                    });
+                }
+                
+                // 更新儀表板統計數據 (基於所有帳務)
+                let totalRevenue = 0, paidAmount = 0, unpaidAmount = 0;
+                allInvoices.forEach(invoice => {
+                    if (invoice.status === '已付款') {
+                        paidAmount += invoice.totalAmount || 0;
+                    } else if (invoice.status === '已傳送' || invoice.status === '已逾期') {
+                        unpaidAmount += invoice.totalAmount || 0;
+                    }
+                    if (invoice.status !== '草稿') {
+                        totalRevenue += invoice.totalAmount || 0;
+                    }
+                });
+                document.getElementById('dashboard-revenue').textContent = `$${new Intl.NumberFormat().format(totalRevenue)}`;
+                document.getElementById('dashboard-paid').textContent = `$${new Intl.NumberFormat().format(paidAmount)}`;
+                document.getElementById('dashboard-unpaid').textContent = `$${new Intl.NumberFormat().format(unpaidAmount)}`;
+            }
+
             async function renderCharts() {
                 if(revenueChart) revenueChart.destroy();
                 if(customerChart) customerChart.destroy();
@@ -928,6 +994,20 @@
                     }
                 });
                 document.getElementById('print-invoice-btn').addEventListener('click', () => window.print());
+
+                // 帳務篩選與排序事件
+                document.getElementById('invoice-sort').addEventListener('change', (e) => {
+                    currentSort = e.target.value;
+                    renderInvoices();
+                });
+                document.getElementById('invoice-filter-status').addEventListener('change', (e) => {
+                    currentStatusFilter = e.target.value;
+                    renderInvoices();
+                });
+                document.getElementById('invoice-search').addEventListener('input', (e) => {
+                    currentSearchTerm = e.target.value;
+                    renderInvoices();
+                });
             }
             
             // --- 10. 初始化執行 ---
