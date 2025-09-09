@@ -51,6 +51,7 @@
         .kanban-column { min-width: 300px; }
         .calendar-day { min-height: 120px; }
         .calendar-day:hover { background-color: #f1f5f9; }
+
         @media print {
             body * { visibility: hidden; }
             .print-area, .print-area * { visibility: visible; }
@@ -59,10 +60,10 @@
                 left: 0; 
                 top: 0; 
                 width: 100%; 
+                padding: 2rem; /* Add padding for print layout */
             }
-            .no-print { display: none; }
+            .no-print { display: none !important; }
 
-            /* Styles for printing form elements */
             .print-area input,
             .print-area select,
             .print-area textarea {
@@ -72,8 +73,9 @@
                 -moz-appearance: none;
                 appearance: none;
                 box-shadow: none !important;
-                padding: 2px;
+                padding: 2px 0;
                 color: black !important;
+                width: 100%; /* Ensure full width */
             }
 
             .print-area input:disabled,
@@ -85,13 +87,9 @@
                 background-color: transparent !important;
             }
 
-            .print-area select {
-                padding-right: 2px !important;
-            }
-
-            .print-area * {
-                color: black !important;
-            }
+            .print-area select { padding-right: 2px !important; }
+            .print-area * { color: black !important; }
+            .print-area .print-text-right { text-align: right; }
         }
     </style>
 </head>
@@ -102,7 +100,7 @@
         <!-- ===== 左側邊欄 ===== -->
         <aside class="w-64 flex-shrink-0 bg-white border-r border-slate-200 flex flex-col no-print">
             <div class="h-28 flex flex-col items-center justify-center border-b border-slate-200 p-4">
-                <img src="https://i.ibb.co/7ttRLCcK/120x120.jpg" alt="威爾設計工作室 LOGO" class="w-16 h-16 rounded-full mb-2">
+                <img src="https://i.ibb.co/7jWd7b4/logo.jpg" alt="威爾設計工作室 LOGO" class="w-16 h-16 rounded-full mb-2">
                 <span class="text-lg font-bold text-slate-700">威爾設計</span>
             </div>
             <nav id="main-nav" class="flex-1 px-4 py-6 space-y-2">
@@ -221,16 +219,142 @@
     <div id="add-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">新增客戶</h3><button class="modal-close-btn text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="add-customer-form"><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="companyName" class="block text-sm font-medium text-slate-700">公司名稱*</label><input type="text" id="companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="taxId" class="block text-sm font-medium text-slate-700">統一編號</label><input type="text" id="taxId" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="contactPerson" class="block text-sm font-medium text-slate-700">聯絡人*</label><input type="text" id="contactPerson" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="phone" class="block text-sm font-medium text-slate-700">連絡電話</label><input type="tel" id="phone" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="fax" class="block text-sm font-medium text-slate-700">傳真</label><input type="tel" id="fax" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="email" class="block text-sm font-medium text-slate-700">電子郵件*</label><input type="email" id="email" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div class="md:col-span-2"><label for="address" class="block text-sm font-medium text-slate-700">地址</label><input type="text" id="address" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div class="md:col-span-2"><label for="notes" class="block text-sm font-medium text-slate-700">備註</label><textarea id="notes" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></textarea></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" class="modal-cancel-btn px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900">儲存客戶</button></div></form></div></div>
     <div id="edit-customer-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-800">編輯客戶資料</h3><button class="modal-close-btn text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="edit-customer-form"><input type="hidden" id="edit-customerId"><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label for="edit-companyName" class="block text-sm font-medium text-slate-700">公司名稱*</label><input type="text" id="edit-companyName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="edit-taxId" class="block text-sm font-medium text-slate-700">統一編號</label><input type="text" id="edit-taxId" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="edit-contactPerson" class="block text-sm font-medium text-slate-700">聯絡人*</label><input type="text" id="edit-contactPerson" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="edit-phone" class="block text-sm font-medium text-slate-700">連絡電話</label><input type="tel" id="edit-phone" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="edit-fax" class="block text-sm font-medium text-slate-700">傳真</label><input type="tel" id="edit-fax" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="edit-email" class="block text-sm font-medium text-slate-700">電子郵件*</label><input type="email" id="edit-email" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div class="md:col-span-2"><label for="edit-address" class="block text-sm font-medium text-slate-700">地址</label><input type="text" id="edit-address" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div class="md:col-span-2"><label for="edit-notes" class="block text-sm font-medium text-slate-700">備註</label><textarea id="edit-notes" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></textarea></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" class="modal-cancel-btn px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900">更新客戶</button></div></form></div></div>
     <div id="project-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 id="project-modal-title" class="text-xl font-bold text-slate-800"></h3><button class="modal-close-btn text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="project-form"><input type="hidden" id="projectId"><div class="space-y-4"><div><label for="projectName" class="block text-sm font-medium text-slate-700">專案名稱*</label><input type="text" id="projectName" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="projectCustomer" class="block text-sm font-medium text-slate-700">關聯客戶*</label><select id="projectCustomer" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></select></div><div><label for="projectDeadline" class="block text-sm font-medium text-slate-700">截止日期</label><input type="date" id="projectDeadline" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="projectStatus" class="block text-sm font-medium text-slate-700">專案狀態</label><select id="projectStatus" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>規劃中</option><option>進行中</option><option>已完成</option></select></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" class="modal-cancel-btn px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" id="project-modal-submit-btn" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900"></button></div></form></div></div>
-    <div id="invoice-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-4xl opacity-0 -translate-y-10 print-area">
-        <!-- Print Header -->
-        <div class="hidden print:flex items-center justify-between mb-8 px-6 pt-6">
-             <div class="flex items-center gap-4">
-                <img src="https://i.ibb.co/7ttRLCcK/120x120.jpg" alt="威爾設計工作室 LOGO" class="w-16 h-16">
-                <h1 class="text-2xl font-bold">威爾設計工作室</h1>
-             </div>
-             <h2 class="text-3xl font-bold text-slate-600">請款單</h2>
+    
+    <!-- Invoice Modal -->
+    <div id="invoice-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none">
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-5xl opacity-0 -translate-y-10">
+            <div class="print-area">
+                <!-- Print Header -->
+                <div class="hidden print:block mb-8 px-6 pt-6">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center gap-4">
+                            <img src="https://i.ibb.co/7jWd7b4/logo.jpg" alt="威爾設計工作室 LOGO" class="w-16 h-16">
+                            <div>
+                                <h1 class="text-2xl font-bold">威爾設計工作室</h1>
+                                <p class="text-sm">統一編號: 12345678</p>
+                                <p class="text-sm">聯絡電話: (04) 123-4567</p>
+                            </div>
+                        </div>
+                        <h2 class="text-3xl font-bold text-slate-600">請款單</h2>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-6 p-6 border-b no-print">
+                    <h3 id="invoice-modal-title" class="text-xl font-bold text-slate-800"></h3>
+                    <div>
+                        <button id="print-invoice-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none p-2 mr-2 hidden">🖨️</button>
+                        <button class="modal-close-btn text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button>
+                    </div>
+                </div>
+
+                <form id="invoice-form" class="max-h-[75vh] overflow-y-auto p-6 pt-0 pr-2">
+                    <input type="hidden" id="invoiceId">
+                    
+                    <!-- Top Section: Customer, Project, Dates -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4 mb-6 border-b pb-6">
+                        <div>
+                            <label for="invoiceCustomer" class="block text-sm font-medium text-slate-700">客戶*</label>
+                            <select id="invoiceCustomer" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">客戶統編</label>
+                            <p id="invoice-customer-taxId" class="mt-1 block w-full px-3 py-2 text-slate-500 bg-slate-50 rounded-md">選擇客戶後自動帶入</p>
+                        </div>
+                        <div class="lg:col-span-3">
+                            <label class="block text-sm font-medium text-slate-700">客戶地址</label>
+                            <p id="invoice-customer-address" class="mt-1 block w-full px-3 py-2 text-slate-500 bg-slate-50 rounded-md">選擇客戶後自動帶入</p>
+                        </div>
+                        <hr class="lg:col-span-3 my-2">
+                        <div>
+                            <label for="invoiceProject" class="block text-sm font-medium text-slate-700">關聯專案</label>
+                            <select id="invoiceProject" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></select>
+                        </div>
+                        <div>
+                            <label for="invoiceNumber" class="block text-sm font-medium text-slate-700">帳單號碼*</label>
+                            <input type="text" id="invoiceNumber" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required>
+                        </div>
+                        <div>
+                           <label for="invoiceStatus" class="block text-sm font-medium text-slate-700">狀態</label>
+                           <select id="invoiceStatus" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>草稿</option><option>已傳送</option><option>已付款</option><option>已逾期</option></select>
+                        </div>
+                        <div>
+                           <label for="invoiceIssueDate" class="block text-sm font-medium text-slate-700">開立日期</label>
+                           <input type="date" id="invoiceIssueDate" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500">
+                        </div>
+                         <div>
+                           <label for="invoiceDueDate" class="block text-sm font-medium text-slate-700">付款期限</label>
+                           <input type="date" id="invoiceDueDate" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500">
+                        </div>
+                        <div>
+                           <label for="invoiceCloseDate" class="block text-sm font-medium text-slate-700">結案日期</label>
+                           <input type="date" id="invoiceCloseDate" class="mt-1 block w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-md shadow-sm" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Items Section -->
+                    <div class="mb-4">
+                        <h4 class="text-lg font-semibold text-slate-800 mb-2">服務項目</h4>
+                        <div class="hidden print:block">
+                            <div class="flex font-bold text-sm border-b pb-1">
+                                <div class="flex-grow">項目描述</div>
+                                <div class="w-20 text-center">數量</div>
+                                <div class="w-28 text-right">單價</div>
+                                <div class="w-24 text-right">合計</div>
+                            </div>
+                        </div>
+                        <div id="invoice-items-container" class="space-y-2"></div>
+                        <button type="button" id="add-invoice-item-btn" class="mt-2 text-sm text-wine-700 font-semibold hover:text-wine-900 no-print">+ 新增項目</button>
+                    </div>
+                    
+                    <!-- Totals Section -->
+                    <div class="flex justify-end mt-6 border-t pt-4">
+                        <div class="w-full md:w-2/5 text-right space-y-2">
+                            <div class="flex justify-between"><span class="font-semibold text-slate-600">小計:</span><span id="invoice-subtotal-amount" class="font-semibold text-slate-800">$0.00</span></div>
+                            <div class="flex justify-between items-center"><span class="font-semibold text-slate-600">折扣:</span><input type="number" id="invoice-discount" placeholder="輸入折扣金額" class="w-32 mt-1 block px-3 py-1 bg-white border border-slate-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500 text-right" value="0"></div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="invoice-taxable" class="h-4 w-4 rounded border-gray-300 text-wine-600 focus:ring-wine-500 mr-2">
+                                    <label for="invoice-taxable" class="font-semibold text-slate-600">含稅 (5%)</label>
+                                </div>
+                                <span id="invoice-tax-amount" class="font-semibold text-slate-800">$0.00</span>
+                            </div>
+                            <div class="flex justify-between"><span class="font-bold text-slate-600">總計:</span><span id="invoice-total-amount" class="font-bold text-xl text-slate-800">$0.00</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Notes & Payment Info -->
+                     <div class="mt-8 border-t pt-4">
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="invoicePaymentInfo" class="block text-sm font-medium text-slate-700 mb-1">付款資訊</label>
+                                <textarea id="invoicePaymentInfo" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500 text-sm">銀行名稱: 玉山銀行 (808)
+戶名: 威爾設計工作室
+帳號: 1234-5678-9012-3456</textarea>
+                            </div>
+                            <div>
+                                <label for="invoiceNotes" class="block text-sm font-medium text-slate-700 mb-1">備註</label>
+                                <textarea id="invoiceNotes" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500 text-sm" placeholder="請於付款期限內完成付款，感謝您的合作！"></textarea>
+                            </div>
+                         </div>
+                    </div>
+
+                    <!-- Print Footer -->
+                     <div class="hidden print:flex justify-between items-end mt-24">
+                         <div class="text-sm">謝謝惠顧</div>
+                         <div class="w-1/3 text-center">
+                             <div class="border-t pt-2">公司簽章</div>
+                         </div>
+                     </div>
+
+                    <div class="mt-8 flex justify-end space-x-3 no-print" id="invoice-modal-footer">
+                        <button type="button" class="modal-cancel-btn px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button>
+                        <button type="submit" id="invoice-modal-submit-btn" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900"></button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="flex justify-between items-center mb-6 p-6 border-b no-print"><h3 id="invoice-modal-title" class="text-xl font-bold text-slate-800"></h3><div><button id="print-invoice-btn" class="text-slate-500 hover:text-slate-800 text-2xl leading-none p-2 mr-2 hidden">🖨️</button><button class="modal-close-btn text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div></div><form id="invoice-form" class="max-h-[70vh] overflow-y-auto p-6 pt-0 pr-2"><input type="hidden" id="invoiceId"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"><div><label for="invoiceCustomer" class="block text-sm font-medium text-slate-700">客戶*</label><select id="invoiceCustomer" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></select></div><div><label for="invoiceProject" class="block text-sm font-medium text-slate-700">關聯專案</label><select id="invoiceProject" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></select></div><div><label for="invoiceNumber" class="block text-sm font-medium text-slate-700">帳單號碼*</label><input type="text" id="invoiceNumber" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="invoiceIssueDate" class="block text-sm font-medium text-slate-700">開立日期</label><input type="date" id="invoiceIssueDate" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></div><div><label for="invoiceStatus" class="block text-sm font-medium text-slate-700">狀態</label><select id="invoiceStatus" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"><option>草稿</option><option>已傳送</option><option>已付款</option><option>已逾期</option></select></div><div><label for="invoiceCloseDate" class="block text-sm font-medium text-slate-700">結案日期</label><input type="date" id="invoiceCloseDate" class="mt-1 block w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-md shadow-sm" readonly></div></div><div class="mb-4"><h4 class="text-lg font-semibold text-slate-800 mb-2">服務項目</h4><div id="invoice-items-container" class="space-y-2"></div><button type="button" id="add-invoice-item-btn" class="mt-2 text-sm text-wine-700 font-semibold hover:text-wine-900 no-print">+ 新增項目</button></div><div class="flex justify-end mt-6 border-t pt-4"><div class="w-full md:w-1/3 text-right space-y-2"><div class="flex justify-between"><span class="font-semibold text-slate-600">小計:</span><span id="invoice-subtotal-amount" class="font-semibold text-slate-800">$0.00</span></div><div class="flex justify-between items-center"><span class="font-semibold text-slate-600">折扣:</span><input type="number" id="invoice-discount" placeholder="輸入折扣金額" class="w-32 mt-1 block px-3 py-1 bg-white border border-slate-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500 text-right" value="0"></div><div class="flex justify-between"><span class="font-bold text-slate-600">總計:</span><span id="invoice-total-amount" class="font-bold text-xl text-slate-800">$0.00</span></div></div></div><div class="mt-8 flex justify-end space-x-3 no-print" id="invoice-modal-footer"><button type="button" class="modal-cancel-btn px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" id="invoice-modal-submit-btn" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900"></button></div></form></div></div>
+    </div>
+    
     <div id="event-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 opacity-0 pointer-events-none"><div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 opacity-0 -translate-y-10"><div class="flex justify-between items-center mb-6"><h3 id="event-modal-title" class="text-xl font-bold text-slate-800"></h3><button class="modal-close-btn text-slate-500 hover:text-slate-800 text-2xl leading-none">&times;</button></div><form id="event-form"><input type="hidden" id="eventId"><input type="hidden" id="eventDate"><div class="space-y-4"><div><label for="eventTitle" class="block text-sm font-medium text-slate-700">事件標題*</label><input type="text" id="eventTitle" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" required></div><div><label for="eventCustomer" class="block text-sm font-medium text-slate-700">關聯客戶</label><select id="eventCustomer" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></select></div><div><label for="eventProject" class="block text-sm font-medium text-slate-700">關聯專案</label><select id="eventProject" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></select></div><div><label for="eventNotes" class="block text-sm font-medium text-slate-700">備註</label><textarea id="eventNotes" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500"></textarea></div></div><div class="mt-6 flex justify-end space-x-3"><button type="button" id="event-modal-delete-btn" class="hidden px-4 py-2 bg-red-100 text-red-700 rounded-md hover:bg-red-200 mr-auto">刪除</button><button type="button" class="modal-cancel-btn px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">取消</button><button type="submit" id="event-modal-submit-btn" class="px-4 py-2 bg-wine-800 text-white rounded-md hover:bg-wine-900">儲存</button></div></form></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -531,6 +655,8 @@
                 invoiceForm.reset();
                 document.getElementById('invoice-items-container').innerHTML = '';
                 document.getElementById('invoice-discount').value = 0;
+                document.getElementById('invoice-taxable').checked = false;
+                updateCustomerInfoOnInvoice(null); // Clear customer info
                 updateInvoiceTotal();
 
                 document.getElementById('print-invoice-btn').classList.add('hidden');
@@ -560,10 +686,7 @@
                     addInvoiceItem(); // Add one item by default
                 } else if (invoiceId) {
                     const doc = await invoiceCollection.doc(invoiceId).get();
-                    if (!doc.exists) {
-                        console.error("Invoice not found");
-                        return;
-                    }
+                    if (!doc.exists) { console.error("Invoice not found"); return; }
 
                     const invoice = doc.data();
                     const viewOnly = mode === 'view';
@@ -580,13 +703,18 @@
                     
                     invoiceModal.querySelector('#invoiceId').value = doc.id;
                     invoiceModal.querySelector('#invoiceCustomer').value = invoice.customerId;
+                    await updateCustomerInfoOnInvoice(invoice.customerId); // Populate customer details
                     await populateProjectDropdown(invoice.customerId, invoiceModal.querySelector('#invoiceProject'));
                     invoiceModal.querySelector('#invoiceProject').value = invoice.projectId;
                     invoiceModal.querySelector('#invoiceNumber').value = invoice.invoiceNumber;
                     invoiceModal.querySelector('#invoiceIssueDate').value = invoice.issueDate;
+                    invoiceModal.querySelector('#invoiceDueDate').value = invoice.dueDate || '';
                     invoiceModal.querySelector('#invoiceStatus').value = invoice.status;
                     invoiceModal.querySelector('#invoiceCloseDate').value = invoice.closeDate || '';
                     invoiceModal.querySelector('#invoice-discount').value = invoice.discount || 0;
+                    invoiceModal.querySelector('#invoice-taxable').checked = invoice.taxable || false;
+                    invoiceModal.querySelector('#invoiceNotes').value = invoice.notes || '';
+                    invoiceModal.querySelector('#invoicePaymentInfo').value = invoice.paymentInfo || '銀行名稱: 玉山銀行 (808)\n戶名: 威爾設計工作室\n帳號: 1234-5678-9012-3456';
                     
                     if (invoice.items && Array.isArray(invoice.items)) {
                         invoice.items.forEach(item => addInvoiceItem(item, viewOnly));
@@ -596,8 +724,31 @@
                 openModal(invoiceModal);
             }
 
+            async function updateCustomerInfoOnInvoice(customerId) {
+                const taxIdEl = document.getElementById('invoice-customer-taxId');
+                const addressEl = document.getElementById('invoice-customer-address');
+                if (!customerId) {
+                    taxIdEl.textContent = '選擇客戶後自動帶入';
+                    addressEl.textContent = '選擇客戶後自動帶入';
+                    return;
+                }
+                try {
+                    const doc = await customerCollection.doc(customerId).get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        taxIdEl.textContent = data.taxId || '未提供';
+                        addressEl.textContent = data.address || '未提供';
+                    }
+                } catch (error) {
+                    console.error("Error fetching customer details:", error);
+                    taxIdEl.textContent = '讀取錯誤';
+                    addressEl.textContent = '讀取錯誤';
+                }
+            }
+
             invoiceForm.querySelector('#invoiceCustomer').addEventListener('change', (e) => {
                 populateProjectDropdown(e.target.value, invoiceForm.querySelector('#invoiceProject'));
+                updateCustomerInfoOnInvoice(e.target.value);
             });
 
             function addInvoiceItem(item = { description: '', quantity: 1, unitPrice: 0 }, viewOnly = false) {
@@ -606,10 +757,10 @@
                 itemDiv.className = 'flex items-center space-x-2 invoice-item';
                 itemDiv.innerHTML = `
                     <input type="text" placeholder="項目描述" class="item-desc flex-grow mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" value="${item.description}" ${viewOnly ? 'disabled' : ''} required>
-                    <input type="number" placeholder="數量" class="item-qty w-20 mt-1 block px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" value="${item.quantity}" ${viewOnly ? 'disabled' : ''} required>
-                    <input type="number" placeholder="單價" class="item-price w-28 mt-1 block px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500" value="${item.unitPrice}" ${viewOnly ? 'disabled' : ''} required>
+                    <input type="number" placeholder="數量" class="item-qty w-20 mt-1 block px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500 text-center" value="${item.quantity}" ${viewOnly ? 'disabled' : ''} required>
+                    <input type="number" placeholder="單價" class="item-price w-28 mt-1 block px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500 text-right" value="${item.unitPrice}" ${viewOnly ? 'disabled' : ''} required>
                     <span class="item-total w-24 text-right font-medium text-slate-700">$0.00</span>
-                    ${!viewOnly ? '<button type="button" class="remove-invoice-item-btn text-red-500 hover:text-red-700 no-print">&times;</button>' : '<div class="w-6"></div>'}
+                    ${!viewOnly ? '<button type="button" class="remove-invoice-item-btn text-red-500 hover:text-red-700 no-print text-2xl font-bold">&times;</button>' : '<div class="w-8"></div>'}
                 `;
                 container.appendChild(itemDiv);
                 updateInvoiceTotal();
@@ -621,15 +772,20 @@
                     const qty = parseFloat(itemDiv.querySelector('.item-qty').value) || 0;
                     const price = parseFloat(itemDiv.querySelector('.item-price').value) || 0;
                     const lineTotal = qty * price;
-                    itemDiv.querySelector('.item-total').textContent = `$${new Intl.NumberFormat().format(lineTotal)}`;
+                    itemDiv.querySelector('.item-total').textContent = `$${new Intl.NumberFormat().format(lineTotal.toFixed(2))}`;
                     subtotal += lineTotal;
                 });
 
                 const discount = parseFloat(document.getElementById('invoice-discount').value) || 0;
-                const total = subtotal - discount;
+                const isTaxable = document.getElementById('invoice-taxable').checked;
+                
+                const subtotalAfterDiscount = subtotal - discount;
+                const taxAmount = isTaxable ? subtotalAfterDiscount * 0.05 : 0;
+                const total = subtotalAfterDiscount + taxAmount;
 
-                document.getElementById('invoice-subtotal-amount').textContent = `$${new Intl.NumberFormat().format(subtotal)}`;
-                document.getElementById('invoice-total-amount').textContent = `$${new Intl.NumberFormat().format(total)}`;
+                document.getElementById('invoice-subtotal-amount').textContent = `$${new Intl.NumberFormat().format(subtotal.toFixed(2))}`;
+                document.getElementById('invoice-tax-amount').textContent = `$${new Intl.NumberFormat().format(taxAmount.toFixed(2))}`;
+                document.getElementById('invoice-total-amount').textContent = `$${new Intl.NumberFormat().format(total.toFixed(2))}`;
             }
             
             invoiceForm.addEventListener('submit', async (e) => {
@@ -653,7 +809,10 @@
                 });
 
                 const discount = parseFloat(invoiceForm.querySelector('#invoice-discount').value) || 0;
-                const totalAmount = subtotal - discount;
+                const taxable = invoiceForm.querySelector('#invoice-taxable').checked;
+                const subtotalAfterDiscount = subtotal - discount;
+                const taxAmount = taxable ? subtotalAfterDiscount * 0.05 : 0;
+                const totalAmount = subtotalAfterDiscount + taxAmount;
                 
                 const status = invoiceForm.querySelector('#invoiceStatus').value;
                 const isPaid = status === '已付款';
@@ -665,11 +824,16 @@
                     projectName: projectOption ? projectOption.dataset.name : '',
                     invoiceNumber: invoiceForm.querySelector('#invoiceNumber').value,
                     issueDate: invoiceForm.querySelector('#invoiceIssueDate').value,
+                    dueDate: invoiceForm.querySelector('#invoiceDueDate').value,
                     status: status,
                     closeDate: isPaid ? (invoiceForm.querySelector('#invoiceCloseDate').value || new Date().toISOString().split('T')[0]) : '',
                     items: items,
                     discount: discount,
-                    totalAmount: totalAmount
+                    taxable: taxable,
+                    taxAmount: taxAmount,
+                    totalAmount: totalAmount,
+                    notes: invoiceForm.querySelector('#invoiceNotes').value,
+                    paymentInfo: invoiceForm.querySelector('#invoicePaymentInfo').value,
                 };
 
                 try {
@@ -1039,7 +1203,7 @@
 
                 // 帳務 Modal
                 document.getElementById('invoice-form').addEventListener('input', (e) => {
-                    if (e.target.matches('.item-qty, .item-price, #invoice-discount')) {
+                    if (e.target.matches('.item-qty, .item-price, #invoice-discount, #invoice-taxable')) {
                         updateInvoiceTotal();
                     }
                 });
