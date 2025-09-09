@@ -55,13 +55,36 @@
         @media print {
             body * { visibility: hidden; }
             .print-area, .print-area * { visibility: visible; }
-            .print-area { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100%; 
-                padding: 2rem; /* Add padding for print layout */
+            
+            /* Reset parent modal styles to prevent layout constraints */
+            #invoice-modal {
+                position: static !important;
+                display: block !important;
+                background: white !important;
+                padding: 0 !important;
+                overflow: visible !important;
             }
+            
+            #invoice-modal .modal-content {
+                width: 100% !important;
+                max-width: none !important;
+                box-shadow: none !important;
+                transform: none !important;
+                opacity: 1 !important;
+                max-height: none !important;
+                overflow: visible !important;
+                padding: 0 !important;
+            }
+
+            .print-area { 
+                position: static !important;
+                width: auto;
+                margin: 0;
+                padding: 2rem; /* Add padding for margins */
+                border: none !important;
+                box-shadow: none !important;
+            }
+
             .no-print { display: none !important; }
 
             .print-area input,
@@ -75,7 +98,7 @@
                 box-shadow: none !important;
                 padding: 2px 0;
                 color: black !important;
-                width: 100%; /* Ensure full width */
+                width: 100%;
             }
 
             .print-area input:disabled,
@@ -1247,3 +1270,4 @@
     </script>
 </body>
 </html>
+
