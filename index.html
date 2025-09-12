@@ -283,7 +283,8 @@
                                 </div>
                                 <span id="invoice-tax-amount" class="font-semibold text-slate-800">$0.00</span>
                             </div>
-                            <div class="flex justify-between"><span class="font-bold text-slate-600">總計:</span><span id="invoice-total-amount" class="font-bold text-xl text-slate-800">$0.00</span></div>
+                             <div class="flex justify-between items-center"><span class="font-semibold text-slate-600">訂金 (已付):</span><input type="number" id="invoice-deposit" placeholder="輸入訂金" class="w-32 mt-1 block px-3 py-1 bg-white border border-slate-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-wine-500 focus:border-wine-500 text-right" value="0"></div>
+                            <div class="flex justify-between border-t mt-2 pt-2"><span class="font-bold text-slate-600">應付餘額:</span><span id="invoice-balance-due" class="font-bold text-xl text-slate-800">$0.00</span></div>
                         </div>
                     </div>
                      <div class="mt-8 border-t pt-4">
@@ -358,8 +359,14 @@
                             <div class="grid grid-cols-2 gap-x-4 py-1 hidden print-tax-row">
                                 <p>營業稅 (5%):</p><p class="text-right print-tax">$0.00</p>
                             </div>
+                            <div class="grid grid-cols-2 gap-x-4 py-1 border-t border-gray-300 mt-1 pt-1">
+                                <p class="font-bold">合計金額:</p><p class="text-right font-bold print-grand-total">$0.00</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-x-4 py-1">
+                                <p>訂金 (已付):</p><p class="text-right print-deposit">$0.00</p>
+                            </div>
                             <div class="grid grid-cols-2 gap-x-4 py-2 mt-2 border-t-2 border-black">
-                                <p class="font-bold text-lg">總計:</p><p class="text-right font-bold text-lg print-total">$0.00</p>
+                                <p class="font-bold text-lg">應付餘額:</p><p class="text-right font-bold text-lg print-balance-due">$0.00</p>
                             </div>
                         </div>
                     </div>
@@ -684,6 +691,7 @@
                 invoiceForm.reset();
                 document.getElementById('invoice-items-container').innerHTML = '';
                 document.getElementById('invoice-discount').value = 0;
+                document.getElementById('invoice-deposit').value = 0;
                 document.getElementById('invoice-taxable').checked = false;
                 updateCustomerInfoOnInvoice(null); // Clear customer info
                 updateInvoiceTotal();
@@ -741,6 +749,7 @@
                     invoiceModal.querySelector('#invoiceStatus').value = invoice.status;
                     invoiceModal.querySelector('#invoiceCloseDate').value = invoice.closeDate || '';
                     invoiceModal.querySelector('#invoice-discount').value = invoice.discount || 0;
+                    invoiceModal.querySelector('#invoice-deposit').value = invoice.deposit || 0;
                     invoiceModal.querySelector('#invoice-taxable').checked = invoice.taxable || false;
                     invoiceModal.querySelector('#invoiceNotes').value = invoice.notes || '';
                     invoiceModal.querySelector('#invoicePaymentInfo').value = invoice.paymentInfo || '銀行名稱: 玉山銀行 (808)\n戶名: 威爾設計工作室\n帳號: 1234-5678-9012-3456';
@@ -806,15 +815,17 @@
                 });
 
                 const discount = parseFloat(document.getElementById('invoice-discount').value) || 0;
+                const deposit = parseFloat(document.getElementById('invoice-deposit').value) || 0;
                 const isTaxable = document.getElementById('invoice-taxable').checked;
                 
                 const subtotalAfterDiscount = subtotal - discount;
                 const taxAmount = isTaxable ? subtotalAfterDiscount * 0.05 : 0;
-                const total = subtotalAfterDiscount + taxAmount;
+                const grandTotal = subtotalAfterDiscount + taxAmount;
+                const balanceDue = grandTotal - deposit;
 
                 document.getElementById('invoice-subtotal-amount').textContent = `$${new Intl.NumberFormat().format(subtotal.toFixed(2))}`;
                 document.getElementById('invoice-tax-amount').textContent = `$${new Intl.NumberFormat().format(taxAmount.toFixed(2))}`;
-                document.getElementById('invoice-total-amount').textContent = `$${new Intl.NumberFormat().format(total.toFixed(2))}`;
+                document.getElementById('invoice-balance-due').textContent = `$${new Intl.NumberFormat().format(balanceDue.toFixed(2))}`;
             }
             
             invoiceForm.addEventListener('submit', async (e) => {
@@ -838,6 +849,7 @@
                 });
 
                 const discount = parseFloat(invoiceForm.querySelector('#invoice-discount').value) || 0;
+                const deposit = parseFloat(invoiceForm.querySelector('#invoice-deposit').value) || 0;
                 const taxable = invoiceForm.querySelector('#invoice-taxable').checked;
                 const subtotalAfterDiscount = subtotal - discount;
                 const taxAmount = taxable ? subtotalAfterDiscount * 0.05 : 0;
@@ -858,9 +870,10 @@
                     closeDate: isPaid ? (invoiceForm.querySelector('#invoiceCloseDate').value || new Date().toISOString().split('T')[0]) : '',
                     items: items,
                     discount: discount,
+                    deposit: deposit,
                     taxable: taxable,
                     taxAmount: taxAmount,
-                    totalAmount: totalAmount,
+                    totalAmount: totalAmount, // This is the grand total
                     notes: invoiceForm.querySelector('#invoiceNotes').value,
                     paymentInfo: invoiceForm.querySelector('#invoicePaymentInfo').value,
                 };
@@ -1052,7 +1065,8 @@
                     if (invoice.status === '已付款') {
                         paidAmount += invoice.totalAmount || 0;
                     } else if (invoice.status === '已傳送' || invoice.status === '已逾期') {
-                        unpaidAmount += invoice.totalAmount || 0;
+                        const balance = (invoice.totalAmount || 0) - (invoice.deposit || 0);
+                        unpaidAmount += balance;
                     }
                 });
                 document.getElementById('dashboard-total-revenue').textContent = `$${new Intl.NumberFormat().format(totalRevenue)}`;
@@ -1221,16 +1235,32 @@
                     `;
                     itemsTbody.insertAdjacentHTML('beforeend', row);
                 });
+                
+                const subtotal = Array.from(form.querySelectorAll('.invoice-item')).reduce((acc, itemDiv) => {
+                    const qty = parseFloat(itemDiv.querySelector('.item-qty').value) || 0;
+                    const price = parseFloat(itemDiv.querySelector('.item-price').value) || 0;
+                    return acc + (qty * price);
+                }, 0);
+                const discount = parseFloat(document.getElementById('invoice-discount').value) || 0;
+                const deposit = parseFloat(document.getElementById('invoice-deposit').value) || 0;
+                const isTaxable = document.getElementById('invoice-taxable').checked;
+                const subtotalAfterDiscount = subtotal - discount;
+                const taxAmount = isTaxable ? subtotalAfterDiscount * 0.05 : 0;
+                const grandTotal = subtotalAfterDiscount + taxAmount;
+                const balanceDue = grandTotal - deposit;
 
-                printContainer.querySelector('.print-subtotal').textContent = document.getElementById('invoice-subtotal-amount').textContent;
-                printContainer.querySelector('.print-discount').textContent = `-$${new Intl.NumberFormat().format(parseFloat(document.getElementById('invoice-discount').value || 0).toFixed(2))}`;
-                if (form.querySelector('#invoice-taxable').checked) {
+                printContainer.querySelector('.print-subtotal').textContent = `$${new Intl.NumberFormat().format(subtotal.toFixed(2))}`;
+                printContainer.querySelector('.print-discount').textContent = `-$${new Intl.NumberFormat().format(discount.toFixed(2))}`;
+                printContainer.querySelector('.print-grand-total').textContent = `$${new Intl.NumberFormat().format(grandTotal.toFixed(2))}`;
+                printContainer.querySelector('.print-deposit').textContent = `-$${new Intl.NumberFormat().format(deposit.toFixed(2))}`;
+                printContainer.querySelector('.print-balance-due').textContent = `$${new Intl.NumberFormat().format(balanceDue.toFixed(2))}`;
+
+                if (isTaxable) {
                     printContainer.querySelector('.print-tax-row').classList.remove('hidden');
-                    printContainer.querySelector('.print-tax').textContent = document.getElementById('invoice-tax-amount').textContent;
+                    printContainer.querySelector('.print-tax').textContent = `$${new Intl.NumberFormat().format(taxAmount.toFixed(2))}`;
                 } else {
                     printContainer.querySelector('.print-tax-row').classList.add('hidden');
                 }
-                printContainer.querySelector('.print-total').textContent = document.getElementById('invoice-total-amount').textContent;
 
                 printContainer.querySelector('.print-notes').textContent = form.querySelector('#invoiceNotes').value;
                 printContainer.querySelector('.print-payment-info').textContent = form.querySelector('#invoicePaymentInfo').value;
@@ -1284,7 +1314,7 @@
 
                 // 帳務 Modal
                 document.getElementById('invoice-form').addEventListener('input', (e) => {
-                    if (e.target.matches('.item-qty, .item-price, #invoice-discount, #invoice-taxable')) {
+                    if (e.target.matches('.item-qty, .item-price, #invoice-discount, #invoice-taxable, #invoice-deposit')) {
                         updateInvoiceTotal();
                     }
                 });
